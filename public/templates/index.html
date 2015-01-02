@@ -1,6 +1,41 @@
 <html ng-app="wheezy">
-    <head></head>
-    <body>
+    <head>
+        <script src="/bower_components/angular/angular.js"></script>
+        <script src="/bower_components/angular-cookies/angular-cookies.js"></script>
+        <script src="/js/app.js"></script>
+        <script src="/js/services.js"></script>
+        <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font: 13px Helvetica, Arial; }
+            html, body {
+                width:  100%;
+                height: 100%;
+                margin: 0px;
+            }
+            #gameArea {
+                position: absolute;
+                left:     50%;
+                top:      50%;
+            }
+            #gameCanvas {
+                width: 100%;
+                height: 100%;
+            }
+            #statsPanel {
+                position: absolute;
+                width: 100%;
+                height: 8%;
+                bottom: 0;
+                opacity: 0.8;
+            }
+        </style>
+        <script src="/socket.io/socket.io.js"></script>
 
+    </head>
+    <body>
+        <div id="gameArea">
+            <canvas id="gameCanvas"></canvas>
+            <div id="statsPanel"></div>
+        </div>
     </body>
 </html>

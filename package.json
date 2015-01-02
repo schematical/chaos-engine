@@ -12,6 +12,7 @@
 		"express": "*",
 		"underscore":"*",
 		"mkdirp":"*",
-		"socket.io":"*"
+		"socket.io":"*",
+		"async":"*n"
 	}
 }
