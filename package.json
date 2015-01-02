@@ -1,0 +1,17 @@
+{
+	"name": "wheezy-world",
+	"version": "0.0.0",
+	"description": "It aint eazy being Paul Wheezy",
+	"author": {
+		"name": "Matt Lea",
+		"email": "mlea@schematical.com",
+		"url": "https://github.com/schematical"
+	},
+	"main": "app/index.js",
+	"dependencies": {
+		"express": "*",
+		"underscore":"*",
+		"mkdirp":"*",
+		"socket.io":"*"
+	}
+}
