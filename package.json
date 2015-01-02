@@ -13,6 +13,6 @@
 		"underscore":"*",
 		"mkdirp":"*",
 		"socket.io":"*",
-		"async":"*n"
+		"async":"*"
 	}
 }

@@ -8,7 +8,8 @@ app.get('/', function(req, res){
 	res.sendFile(__dirname + '/public/templates/index.html');
 });
 
-io.on('connection', app.Engine.connect_user);
+var game = new app.Game({});
+io.on('connection', function(socket){ game.connect_user(socket) });
 
 
 

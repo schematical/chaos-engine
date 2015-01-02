@@ -18,11 +18,25 @@
  ) .factory(
 	 'Socket',
 	 [
-		 function(){
+		 '$cookies',
+		 '$cookieStore',
+		 function($cookies, $cookieStore){
 			 var socket = window.io();
 			 socket.on('hello', function(data){
-				 alert("Hello Hit");
-			 })
+
+				 socket.emit('greet', { user: $cookieStore.user });
+			 });
+			 socket.on('create-user', function(data){
+
+				 //Create cookie
+				 $cookies.user = data.user;
+
+			 });
+			 socket.on('init-world', function(data){
+
+					console.log("Init WOrld:" , data);
+
+			 });
 			 return socket;
 		 }
 	 ]
