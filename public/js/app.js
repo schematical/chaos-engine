@@ -17,12 +17,10 @@ angular.module(
 		'$timeout',
 		'GameScreen',
 		'Socket',
-		function ($timeout, GameScreen, Socket) {
+		'ObjectCache',
+		function ($timeout, GameScreen, Socket, ObjectCache) {
+			ObjectCache.preload();
 
-			console.log(Socket);
-			$timeout(function(){
-				var gameScreen = new GameScreen();
-				gameScreen.resize();
-			}, 2000);
+
 		}
 	])
