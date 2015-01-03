@@ -51,19 +51,23 @@ angular.module('wheezy')
 	).service(
 		'Socket',
 		[
+			'$rootScope',
 			'$cookies',
-			'$cookieStore',
 			'GameScreen',
-			function ($cookies, $cookieStore, GameScreen) {
+			function ($rootScope, $cookies, GameScreen) {
 				var socket = window.io();
 				socket.on('hello', function (data) {
-
-					socket.emit('greet', { user: $cookieStore.user });
+					//console.log($cookies);
+					socket.emit('greet', { user: $cookies.user /*$cookieStore.get('user')*/ });
 				});
 				socket.on('create-user', function (data) {
 
 					//Create cookie
+					//console.log(data.user);
+					//$cookieStore.remove('user');
+					//$cookieStore.put('user', data.user);
 					$cookies.user = data.user;
+					$rootScope.$digest();
 
 				});
 				socket.on('refresh-world', function (data) {
@@ -132,6 +136,23 @@ angular.module('wheezy')
 									});
 								}
 							}
+						}
+					}
+					for (var i in world.objects) {
+						if( world.objects[i]){
+
+							var object =  world.objects[i];
+
+							ObjectCache.loadImage(object.type, object.state, function (err, image) {
+
+								_this.gameContext.drawImage(
+									image,
+									object.x * _this.tile_width,
+									object.y * _this.tile_width,
+									_this.tile_width,
+									_this.tile_width
+								);
+							});
 						}
 					}
 				}
@@ -214,6 +235,9 @@ angular.module('wheezy')
 								}
 							}
 						});
+						_ObjectCache.cached['player-1'] = {};
+						_ObjectCache.cached['player-1']['default'] = new Image();
+						_ObjectCache.cached['player-1']['default'].src = '/imgs/player/default.bmp';
 					}
 				}
 				return _ObjectCache;
