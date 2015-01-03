@@ -54,7 +54,8 @@ angular.module('wheezy')
 			'$rootScope',
 			'$cookies',
 			'GameScreen',
-			function ($rootScope, $cookies, GameScreen) {
+			'WorldCache',
+			function ($rootScope, $cookies, GameScreen, WorldCache) {
 				var socket = window.io();
 				socket.on('hello', function (data) {
 					//console.log($cookies);
@@ -72,19 +73,87 @@ angular.module('wheezy')
 				});
 				socket.on('refresh-world', function (data) {
 
-					console.log("Init WOrld:", data);
-					GameScreen.render_world(data);
+
+					WorldCache.init(data);
+					GameScreen.render_world();
 
 				});
+				socket.on('update-world', function (data) {
+
+					//console.log("Updateing WOrld:", data);
+					WorldCache.update(data);
+					GameScreen.render_world();
+
+				});
+				/** Setup for user generated events */
+
+				$rootScope.$on('keypress', function (e, a, key) {
+					console.log(key);
+					switch(key){
+						case('s'):
+							//Trigger Down
+							socket.emit('user-input', {
+								action:'player.move.down'
+							})
+						break;
+						case('d'):
+							//Trigger Down
+							socket.emit('user-input', {
+								action:'player.move.right'
+							})
+							break;
+						case('a'):
+							//Trigger Down
+							socket.emit('user-input', {
+								action:'player.move.left'
+							})
+							break;
+						case('w'):
+							//Trigger Down
+							socket.emit('user-input', {
+								action:'player.move.up'
+							})
+							break;
+					}
+					/*$scope.$apply(function () {
+						$scope.key = key;
+					});*/
+				})
 				return socket;
 			}
 		]
-	).service(
+	)
+/**
+ * Caches world data for quicker socket communitication
+ */
+	.service(
+		'WorldCache',
+		[
+
+
+			function () {
+				var _WorldCache ={
+					world:null,
+					init:function(data){
+						_WorldCache.world = data;
+					},
+					update:function(data){
+						for(var object_id in data.objects){
+							_WorldCache.world.objects[object_id] = data.objects[object_id];
+						}
+					}
+				}
+				return _WorldCache;
+			}
+		]
+	)
+	.service(
 		'GameScreen',
 		[
 			'ObjectCache',
+			'WorldCache',
 
-			function (ObjectCache) {
+			function (ObjectCache, WorldCache) {
 				var _GameScreen = function (options) {
 					this.view_port = {
 						x: 0,
@@ -113,7 +182,8 @@ angular.module('wheezy')
 					this.view_port.y = y;
 					this.view_port.z = z;
 				}
-				_GameScreen.prototype.render_world = function (world) {
+				_GameScreen.prototype.render_world = function () {
+					var world = WorldCache.world;
 					var _this = this;
 					var view_radius = 40;
 					for (var x = this.view_port.x - view_radius; x < this.view_port.x + view_radius; x++) {
@@ -244,4 +314,18 @@ angular.module('wheezy')
 			}
 		]
 	)
+.directive('shortcut', ['$document', '$rootScope', function($document, $rootScope) {
+	return {
+		restrict: 'E',
+		replace: true,
+		scope: true,
+		link:    function postLink(scope, iElement, iAttrs){
 
+			$document.bind('keypress', function(e) {
+				//document.onkeypress = function (e) {
+
+				$rootScope.$broadcast('keypress',e , String.fromCharCode(e.which));
+			});
+		}
+	};
+}]);

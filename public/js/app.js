@@ -14,11 +14,13 @@ angular.module(
 			}
 		]
 	).run([
+		'$document',
+		'$rootScope',
 		'$timeout',
 		'GameScreen',
 		'Socket',
 		'ObjectCache',
-		function ($timeout, GameScreen, Socket, ObjectCache) {
+		function ($document, $rootScope, $timeout, GameScreen, Socket, ObjectCache) {
 			ObjectCache.preload();
 
 
