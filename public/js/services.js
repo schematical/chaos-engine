@@ -91,7 +91,7 @@ angular.module('wheezy')
 					}
 					this.gameCanvas = document.getElementById('gameCanvas');
 					this.widthToHeight = 4 / 3;
-					this.tile_width = 100;
+					this.tile_width = 25;
 
 					this.gameContext = this.gameCanvas.getContext("2d");
 					var _this = this;
@@ -109,7 +109,7 @@ angular.module('wheezy')
 				}
 				_GameScreen.prototype.render_world = function (world) {
 					var _this = this;
-					var view_radius = 10;
+					var view_radius = 40;
 					for (var x = this.view_port.x - view_radius; x < this.view_port.x + view_radius; x++) {
 						if(world.tiles[x]){
 
@@ -117,7 +117,7 @@ angular.module('wheezy')
 								if(world.tiles[x][y]){
 
 									var tile = world.tiles[x][y];
-									console.log("Drawing Tile:", tile);
+
 									ObjectCache.loadImage(tile.type, tile.state, function (err, image) {
 
 										_this.gameContext.drawImage(
