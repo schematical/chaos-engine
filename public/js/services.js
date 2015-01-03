@@ -32,7 +32,7 @@
 				 $cookies.user = data.user;
 
 			 });
-			 socket.on('init-world', function(data){
+			 socket.on('refresh-world', function(data){
 
 					console.log("Init WOrld:" , data);
 
