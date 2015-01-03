@@ -308,6 +308,10 @@ angular.module('wheezy')
 						_ObjectCache.cached['player-1'] = {};
 						_ObjectCache.cached['player-1']['default'] = new Image();
 						_ObjectCache.cached['player-1']['default'].src = '/imgs/player/default.bmp';
+
+						_ObjectCache.cached['the_blind_dog'] = {};
+						_ObjectCache.cached['the_blind_dog']['default'] = new Image();
+						_ObjectCache.cached['the_blind_dog']['default'].src = '/imgs/npcs/the_blind_dog/default.bmp';
 					}
 				}
 				return _ObjectCache;
