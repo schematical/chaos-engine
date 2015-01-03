@@ -8,7 +8,7 @@ http://piq.codeus.net/draw
 inputs > outputs
 
 ###Inputs:
-* find nearest
+* find nearest... smell/hear
 * in line of site
 * in front of
 * to the left of
@@ -43,3 +43,18 @@ A filter to select which targets to interact with
 
 
 ####Relationships:
+
+####Commands:
+Commands are the way NPCs communicate with each other.
+
+This is also how the player can quick interact with other NPCs.
+
+Assuming I get to the hierarchy part I will probably make it so low level NPCs take commands from highlevel NPCs
+
+#####Example:
+
+
+#####Civilians:
+Programmed to obey commands from most NPCs
+
+####Hiarchy:
