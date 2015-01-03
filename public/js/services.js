@@ -5,6 +5,8 @@ angular.module('wheezy')
 			function () {
 				var _spriteSheet = function (options) {
 					this.img_src = options.img_src;
+					this.x_offset = options.x_offset || 0;
+					this.y_offset =  options.y_offset || 0;
 					this.tile_width = options.tile_width;
 					this.tile_height = options.tile_height;
 					this.image = null;
@@ -20,8 +22,8 @@ angular.module('wheezy')
 					}
 					this.ctx.drawImage(
 						this.image,
-						x * this.tile_width,
-						y * this.tile_height,
+						(x * this.tile_width) + this.x_offset,
+						(y * this.tile_height) + this.y_offset,
 						this.tile_width,
 						this.tile_height,
 						0,
@@ -197,12 +199,20 @@ angular.module('wheezy')
 
 						var spriteSheet1 = new SpriteSheet({
 							img_src: '/imgs/tiles/spriteSheet1.jpg',
-							tile_width: 25,
-							tile_height: 25
+							tile_width: 26,
+							tile_height: 26,
+							x_offset: 5,
+							y_offset: 5
 						});
 						spriteSheet1.load(function (err, image) {
-							_ObjectCache.cached['tile-1'] = {};
-							_ObjectCache.cached['tile-1']['default'] = spriteSheet1.getTile(4, 4);
+							for(var x = 0; x < 20; x++){
+								for(var y = 0; y < 20; y++){
+									var i = (x * 20) + y;
+
+									_ObjectCache.cached['tile-' + i] = {};
+									_ObjectCache.cached['tile-' + i]['default'] = spriteSheet1.getTile(x, y);
+								}
+							}
 						});
 					}
 				}
