@@ -55,7 +55,8 @@ angular.module('wheezy')
 			'$cookies',
 			'GameScreen',
 			'WorldCache',
-			function ($rootScope, $cookies, GameScreen, WorldCache) {
+			'InventoryModal',
+			function ($rootScope, $cookies, GameScreen, WorldCache, InventoryModal) {
 
 				var socket = window.io();
 				socket.on('hello', function (data) {
@@ -69,11 +70,12 @@ angular.module('wheezy')
 					//$cookieStore.remove('user');
 					//$cookieStore.put('user', data.user);
 					$cookies.user = data.user;
+					$cookies.view_port_focus = data.view_port_focus;
 					$rootScope.$digest();
 
 				});
 				socket.on('refresh-world', function (data) {
-
+					GameScreen.set_viewport_focus($cookies.view_port_focus);
 
 					WorldCache.init(data);
 					GameScreen.render_world();
@@ -89,7 +91,11 @@ angular.module('wheezy')
 				/** Setup for user generated events */
 
 				$rootScope.$on('keypress', function (e, a, key) {
-					console.log(key);
+					if(GameScreen.modal){
+						//Pass control to the modal
+						return GameScreen.modal.apply(key);
+
+					}
 					switch(key){
 						case('s'):
 							//Trigger Down
@@ -122,7 +128,20 @@ angular.module('wheezy')
 								action:'player.interact'
 							})
 							break;
+						case('i'):
+							//Display the inventory Modal
+							GameScreen.showModal(new InventoryModal({
+								ingest:function(inventory_object){
+									socket.emit('user-input', {
+										action:'player.ingest',
+										object:inventory_object
+									})
+								}
+							}));
+
+							break;
 					}
+
 					/*$scope.$apply(function () {
 						$scope.key = key;
 					});*/
@@ -163,6 +182,7 @@ angular.module('wheezy')
 
 			function (ObjectCache, WorldCache) {
 				var _GameScreen = function (options) {
+					this.view_radius = 40;
 					this.view_port = {
 						x: 0,
 						y: 0,
@@ -185,29 +205,52 @@ angular.module('wheezy')
 						_this.resize()
 					}, false);
 				}
+				_GameScreen.prototype.set_viewport_focus = function(object_id){
+					if(object_id.id){
+						object_id = object_id.id;
+					}
+					this.view_port_focus = object_id;
+				}
 				_GameScreen.prototype.set_viewport = function (x, y, z) {
+
 					this.view_port.x = x;
 					this.view_port.y = y;
 					this.view_port.z = z;
 				}
 				_GameScreen.prototype.render_world = function () {
+
+
+
 					var world = WorldCache.world;
 					var _this = this;
-					var view_radius = 40;
-					for (var x = this.view_port.x - view_radius; x < this.view_port.x + view_radius; x++) {
+
+
+					//Update view port
+					if(this.view_port_focus && world.objects[this.view_port_focus]){
+						var focus_object = world.objects[this.view_port_focus];
+						this.set_viewport(
+							focus_object.x,
+							focus_object.y,
+							focus_object.z
+						)
+					}
+
+
+					for (var x = this.view_port.x - this.view_radius; x < this.view_port.x + this.view_radius; x++) {
 						if(world.tiles[x]){
 
-							for (var y = this.view_port.y - view_radius; y < this.view_port.y + view_radius; y++) {
+							for (var y = this.view_port.y - this.view_radius; y < this.view_port.y + this.view_radius; y++) {
 								if(world.tiles[x][y]){
 
 									var tile = world.tiles[x][y];
 
 									ObjectCache.loadImage(tile.type, tile.state, function (err, image) {
-
+										var draw_x = (x - _this.view_port.x) +  _this.view_radius/2;
+										var draw_y = (y - _this.view_port.y) + _this.view_radius/2;
 										_this.gameContext.drawImage(
 											image,
-											x * _this.tile_width,
-											y * _this.tile_width,
+											draw_x * _this.tile_width,
+											draw_y * _this.tile_width,
 											_this.tile_width,
 											_this.tile_width
 										);
@@ -223,11 +266,13 @@ angular.module('wheezy')
 							var object =  world.objects[i];
 							if(!object.detached){
 								ObjectCache.loadImage(object.type, object.state, function (err, image) {
+									var draw_x = (object.x - _this.view_port.x) +  _this.view_radius/2;
+									var draw_y = (object.y - _this.view_port.y) + _this.view_radius/2;
 
 									_this.gameContext.drawImage(
 										image,
-										object.x * _this.tile_width,
-										object.y * _this.tile_width,
+										draw_x * _this.tile_width,
+										draw_y * _this.tile_width,
 										_this.tile_width,
 										_this.tile_width
 									);
@@ -235,9 +280,25 @@ angular.module('wheezy')
 							}
 						}
 					}
+					if(this.modal){
+						this.modal.render();
+					}
 				}
 				_GameScreen.prototype.render = function () {
 
+				}
+				_GameScreen.prototype.showModal = function(modal){
+
+					this.modal = modal;
+					if(!this.modal.world){
+						this.modal.world = WorldCache.world;
+					}
+					if(!this.modal.screen){
+						this.modal.screen = this;
+					}
+				}
+				_GameScreen.prototype.hideModal = function(){
+					this.modal = null;
 				}
 				_GameScreen.prototype.resize = function () {
 					var newWidth = window.innerWidth;
@@ -259,6 +320,8 @@ angular.module('wheezy')
 
 					this.gameCanvas.width = newWidth;
 					this.gameCanvas.height = newHeight;
+					this.view_radius = Math.ceil((newWidth/this.tile_width)/2);
+					/*this.view_radius = newHeight/this.tile_width;*/
 				}
 				var gameScreen = new _GameScreen();
 				gameScreen.resize();
@@ -334,6 +397,95 @@ angular.module('wheezy')
 			}
 		]
 	)
+.service('InventoryModal', ['ObjectCache', function(ObjectCache){
+	var _InventoryModal = function(data){
+		this.ingest = data.ingest;
+		this.selected = null;
+	}
+	_InventoryModal.prototype.render = function(){
+		var screen  = this.screen;
+		screen.gameContext.fillStyle="#000000";
+		var modal_width = this.screen.gameCanvas.width/2;
+		var modal_height = this.screen.gameCanvas.height/2;
+		screen.gameContext.fillRect(
+			screen.gameCanvas.width/4,
+			screen.gameCanvas.height/4,
+			modal_width,
+			modal_height
+		);
+		var object = this.world.objects[screen.view_port_focus];
+		ObjectCache.loadImage(object.type, object.state, function (err, image) {
+
+			screen.gameContext.drawImage(
+				image,
+				modal_width/2 + (modal_width *.1),
+				modal_height/2 + (modal_height *.1),
+				screen.tile_width,
+				screen.tile_width
+			);
+		});
+		var ct = 0;
+		for(var i in object.inventory){
+			var screen_x = modal_width/2 + (modal_width * .9) - screen.tile_width;
+			var screen_y = modal_height/2 + (modal_height * .1) + (screen.tile_width * 1.5 * ct);
+			if(ct == this.selected){
+				screen.gameContext.fillStyle="#ff0000";
+				screen.gameContext.fillRect(
+					screen_x - 5,
+					screen_y - 5,
+					screen.tile_width + 10,
+					screen.tile_width + 10
+				);
+			}
+			ObjectCache.loadImage(object.inventory[i].type, object.inventory[i].state, function (err, image) {
+
+				screen.gameContext.drawImage(
+					image,
+					screen_x,
+					screen_y,
+					screen.tile_width,
+					screen.tile_width
+				);
+			});
+			ct += 1;
+		}
+
+	}
+	_InventoryModal.prototype.apply = function(key){
+
+		var object = this.world.objects[this.screen.view_port_focus];
+		switch (key){
+			case('w'):
+				if(!this.selected ){
+					this.selected = 0;
+				}else{
+					this.selected += 1;
+				}
+				if(this.selected > object.inventory.length){
+					this.selected = 0;
+				}
+			break;
+			case('d'):
+				if(!this.selected ){
+					this.selected = 0;
+				}else{
+					this.selected -= 1;
+				}
+				if(this.selected < 0){
+					this.selected = object.inventory.length;
+				}
+			break;
+			case('enter'):
+				var inventory_object = object.inventory[this.selected];
+				this.ingest(inventory_object);
+			break;
+			case('i'):
+				this.screen.hideModal();
+			break;
+		}
+	}
+	return _InventoryModal;
+}])
 .directive('shortcut', ['$document', '$rootScope', function($document, $rootScope) {
 	return {
 		restrict: 'E',
@@ -343,8 +495,15 @@ angular.module('wheezy')
 
 			$document.bind('keypress', function(e) {
 				//document.onkeypress = function (e) {
-
-				$rootScope.$broadcast('keypress',e , String.fromCharCode(e.which));
+				var key = null;
+				switch(e.which){
+					case(13):
+						key = 'enter';
+					break;
+					default:
+						key = String.fromCharCode(e.which);
+				}
+				$rootScope.$broadcast('keypress',e , key);
 			});
 		}
 	};
