@@ -53,7 +53,9 @@ Each AI-NPC should be wired with a predisposition to equate an action with pain 
 
 Those are the defaults. I would like to randomly generate other types of pain/pleasure triggers:
 
-*
+* Ingesting other inventory_items(drugs, food, etc).
+* Killing, injurying, healing or other various interactions
+* Bartering with others.
 
 If an interaction has one of these effects,
 possibly by watching certain stats with in a certain amount of cycles before an event occurs and after,
@@ -120,4 +122,11 @@ Programmed to obey commands from most NPCs
 
 ####Hiarchy:
 
+#####Families:
+It might also be cool to factor in bloodlines into logic.
+Degrees of seperation from an NPC could affect its decision to act on certain things.
+
+Theoretically NPC's that dont attack their families and nuture them will increase the likley hood that their bloodline will flourish.
+
+NPCs that neglect or attach their bloodline will quickly die out
 

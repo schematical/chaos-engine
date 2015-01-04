@@ -216,21 +216,23 @@ angular.module('wheezy')
 							}
 						}
 					}
+
 					for (var i in world.objects) {
 						if( world.objects[i]){
 
 							var object =  world.objects[i];
+							if(!object.detached){
+								ObjectCache.loadImage(object.type, object.state, function (err, image) {
 
-							ObjectCache.loadImage(object.type, object.state, function (err, image) {
-
-								_this.gameContext.drawImage(
-									image,
-									object.x * _this.tile_width,
-									object.y * _this.tile_width,
-									_this.tile_width,
-									_this.tile_width
-								);
-							});
+									_this.gameContext.drawImage(
+										image,
+										object.x * _this.tile_width,
+										object.y * _this.tile_width,
+										_this.tile_width,
+										_this.tile_width
+									);
+								});
+							}
 						}
 					}
 				}
