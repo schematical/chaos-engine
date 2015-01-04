@@ -27,7 +27,7 @@ inputs > outputs
 * equip object
 * use equipped object
 * interact
-* command (target filter)
+* command (target filter) - Broadcast Maybe?
 
 ####Random Thought:
 Possibly do separate inputs/outputs for economics and interactions.

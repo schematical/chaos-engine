@@ -119,7 +119,7 @@ angular.module('wheezy')
 						case('e'):
 							//Figure out what the user is trying to interact with
 							socket.emit('user-input', {
-								action:'player.move.up'
+								action:'player.interact'
 							})
 							break;
 					}
