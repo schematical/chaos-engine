@@ -56,6 +56,7 @@ angular.module('wheezy')
 			'GameScreen',
 			'WorldCache',
 			function ($rootScope, $cookies, GameScreen, WorldCache) {
+
 				var socket = window.io();
 				socket.on('hello', function (data) {
 					//console.log($cookies);
@@ -110,6 +111,13 @@ angular.module('wheezy')
 							break;
 						case('w'):
 							//Trigger Down
+
+							socket.emit('user-input', {
+								action:'player.move.up'
+							})
+							break;
+						case('e'):
+							//Figure out what the user is trying to interact with
 							socket.emit('user-input', {
 								action:'player.move.up'
 							})
@@ -312,6 +320,12 @@ angular.module('wheezy')
 						_ObjectCache.cached['the_blind_dog'] = {};
 						_ObjectCache.cached['the_blind_dog']['default'] = new Image();
 						_ObjectCache.cached['the_blind_dog']['default'].src = '/imgs/npcs/the_blind_dog/default.bmp';
+
+						_ObjectCache.cached['beretta'] = {};
+						_ObjectCache.cached['beretta']['default'] = new Image();
+						_ObjectCache.cached['beretta']['default'].src = '/imgs/objects/gun.bmp';
+
+
 					}
 				}
 				return _ObjectCache;
