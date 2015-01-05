@@ -3,12 +3,13 @@
 
 // Declare app level module which depends on filters, and services
 angular.module(
-		'chaos_engine',
+		'sprite_util',
 		[
 			'ngCookies'
 		]
 	).config(
 		[
+
 			function () {
 
 			}
@@ -17,12 +18,8 @@ angular.module(
 		'$document',
 		'$rootScope',
 		'$timeout',
-		'GameScreen',
-		'Socket',
-		'ObjectCache',
-		function ($document, $rootScope, $timeout, GameScreen, Socket, ObjectCache) {
-			ObjectCache.preload();
-			Socket.init();
+		function ($document, $rootScope, $timeout) {
+
 
 
 		}
