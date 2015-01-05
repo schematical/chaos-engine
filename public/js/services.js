@@ -198,7 +198,8 @@ angular.module('chaos_engine')
 					}
 					this.gameCanvas = document.getElementById('gameCanvas');
 					this.widthToHeight = 4 / 3;
-					this.tile_width = 25;
+					this.tile_width = 75;
+					this.tile_height = 38;
 
 					this.gameContext = this.gameCanvas.getContext("2d");
 					var _this = this;
@@ -238,10 +239,12 @@ angular.module('chaos_engine')
 						)
 					}
 
-
+					var x_offset = 0;
+					var y_offset = 0;
 					for (var x = this.view_port.x - this.view_radius; x < this.view_port.x + this.view_radius; x++) {
 						if (world.tiles[x]) {
-
+							x_offset -= this.tile_width/2;
+							y_offset -= this.tile_height/2;
 							for (var y = this.view_port.y - this.view_radius; y < this.view_port.y + this.view_radius; y++) {
 								if (world.tiles[x][y]) {
 
@@ -252,10 +255,10 @@ angular.module('chaos_engine')
 										var draw_y = (y - _this.view_port.y) + _this.view_radius / 2;
 										_this.gameContext.drawImage(
 											image,
-											draw_x * _this.tile_width,
-											draw_y * _this.tile_width,
+											(draw_x * _this.tile_width) + x_offset,
+											(draw_y * _this.tile_height) + y_offset,
 											_this.tile_width,
-											_this.tile_width
+											_this.tile_height
 										);
 									});
 								}

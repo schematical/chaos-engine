@@ -12,6 +12,7 @@ angular.module('sprite_util')
 				//console.log(message);
 				var pixel_data = $scope.spriteContext.getImageData(mousePos.x, mousePos.y, 1, 1);
 				$scope.selected_color = pixel_data;
+				$scope.$digest();
 			}, false);
 
 			$scope.selector_width = 75;
@@ -66,21 +67,44 @@ angular.module('sprite_util')
 				}
 				imageData.data = data;
 				$scope.spriteContext.putImageData(imageData, 0, 0);
-				$scope.data_obj_rendered = $scope.spriteCanvas.toDataURL();
+
 
 			}
 			$scope.save_binary = function() {
 				var formData = new FormData();
-				formData.append('username', 'johndoe');
-				formData.append('id', 123456);
+
+				formData.append('image_loc', $scope.url);
+				formData.append('image', $scope.toBlob());
 
 				var xhr = new XMLHttpRequest();
-				xhr.open('POST', '/server', true);
+				xhr.open('POST', '/sprite_util', true);
 				xhr.onload = function(e) {
 					//Blah
 				};
 
 				xhr.send(formData);
+			}
+			$scope.toBlob = function(dataURI) {
+				if(!dataURI){
+					dataURI = $scope.spriteCanvas.toDataURL();
+				}
+				// convert base64/URLEncoded data component to raw binary data held in a string
+				var byteString;
+				if (dataURI.split(',')[0].indexOf('base64') >= 0)
+					byteString = atob(dataURI.split(',')[1]);
+				else
+					byteString = unescape(dataURI.split(',')[1]);
+
+				// separate out the mime component
+				var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+				// write the bytes of the string to a typed array
+				var ia = new Uint8Array(byteString.length);
+				for (var i = 0; i < byteString.length; i++) {
+					ia[i] = byteString.charCodeAt(i);
+				}
+
+				return new Blob([ia], {type:mimeString});
 			}
 			$scope.tile = function(){
 				$scope.render();
