@@ -223,8 +223,13 @@ angular.module('chaos_engine')
 					this.view_port.z = z;
 				}
 				_GameScreen.prototype.render_world = function () {
-
-
+					//Clear canvas
+					this.gameContext.clearRect(
+						0,
+						0,
+						this.gameCanvas.width,
+						this.gameCanvas.height
+					);
 					var world = WorldCache.world;
 					var _this = this;
 
@@ -239,12 +244,10 @@ angular.module('chaos_engine')
 						)
 					}
 
-					var x_offset = 0;
-					var y_offset = 0;
+
 					for (var x = this.view_port.x - this.view_radius; x < this.view_port.x + this.view_radius; x++) {
 						if (world.tiles[x]) {
-							x_offset -= this.tile_width/2;
-							y_offset -= this.tile_height/2;
+
 							for (var y = this.view_port.y - this.view_radius; y < this.view_port.y + this.view_radius; y++) {
 								if (world.tiles[x][y]) {
 
@@ -255,8 +258,8 @@ angular.module('chaos_engine')
 										var draw_y = (y - _this.view_port.y) + _this.view_radius / 2;
 										_this.gameContext.drawImage(
 											image,
-											(draw_x * _this.tile_width) + x_offset,
-											(draw_y * _this.tile_height) + y_offset,
+											(draw_x * _this.tile_width) - (_this.tile_width * draw_y/2),
+											(draw_y * _this.tile_height) - (_this.tile_height * draw_y/2),
 											_this.tile_width,
 											_this.tile_height
 										);
@@ -275,12 +278,13 @@ angular.module('chaos_engine')
 									var draw_x = (object.x - _this.view_port.x) + _this.view_radius / 2;
 									var draw_y = (object.y - _this.view_port.y) + _this.view_radius / 2;
 
+
 									_this.gameContext.drawImage(
 										image,
-										draw_x * _this.tile_width,
-										draw_y * _this.tile_width,
-										_this.tile_width,
-										_this.tile_width
+										(draw_x * _this.tile_width) - (_this.tile_width * draw_y/2),
+										(draw_y * _this.tile_height) - (_this.tile_height * draw_y/2),
+										_this.tile_width/2,
+										_this.tile_width/2
 									);
 								});
 							}
@@ -326,7 +330,7 @@ angular.module('chaos_engine')
 
 					this.gameCanvas.width = newWidth;
 					this.gameCanvas.height = newHeight;
-					this.view_radius = Math.ceil((newWidth / this.tile_width) / 2);
+					this.view_radius = Math.ceil((newHeight / this.tile_height));
 					/*this.view_radius = newHeight/this.tile_width;*/
 				}
 				var gameScreen = new _GameScreen();
