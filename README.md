@@ -130,3 +130,9 @@ Theoretically NPC's that dont attack their families and nuture them will increas
 
 NPCs that neglect or attach their bloodline will quickly die out
 
+##Sprites:
+Because I have no money and no time and no skill and I love the Fallout series.
+
+[http://www.spriters-resource.com/pc_computer/fallout2/](http://www.spriters-resource.com/pc_computer/fallout2/)
+
+[http://www.spriters-resource.com/pc_computer/fallouttactics/](http://www.spriters-resource.com/pc_computer/fallouttactics/)
