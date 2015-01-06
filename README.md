@@ -27,6 +27,22 @@ inputs > outputs
 * interact
 * command (target filter) - Broadcast Maybe?
 
+###Chaining Logic:
+Some inputNodes might get chained together.
+
+####Input Chaining:
+* Input: If I have food
+* Input: If I have energy above 50%
+* Input: If I am near to a NPCTarget with low energy
+* Output: Give NPC Food
+
+####Output Chaining:
+* Input: If I have food
+* Input: If I have energy above 50%
+* Input: If I see an NPC Target with low energy
+* Output: Go tward NPC
+* Output: Give NPC Food
+
 ####Random Thought:
 Possibly do separate inputs/outputs for economics and interactions.
 
@@ -38,6 +54,9 @@ A filter to select which targets to interact with
 * Based on state...
 * Based on effects(Example: Medic looks for anyone injured then triggers healing behavior)
 * Based on allegiance
+* Based on gender
+* Based on age
+* Based on family/hiarchy relationship
 
 ####Memories:
 #####Pain/Pleasure Scale:
