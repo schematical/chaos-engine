@@ -147,6 +147,14 @@ NPCs that neglect or attach their bloodline will quickly die out
 
 ##Spawning NPC's:
 Like in life it will take 2 NPCs to create a child NPC.
+The female will remain in a 'pregnent' state for a while.
+Then a child (aprox 12 years of age) will show up. It will remain displayed as a child until it has existed 2000(cycles) aprox.
+The female might take damage during birth.
+
+###Aging:
+NPC's max health and energy will increase up to a point then begin to decrease until they are really fragile or just run out of health.
+If they run out of energy first the simply will not be able to feed them selfs unless another NPC has developed a 'feed the hungry' node set.(That will be so fucking cool).
+
 
 ###NPC's Many Brains:
 Taking a note from the book [Brain Rules](http://www.amazon.com/Brain-Rules-Principles-Surviving-Thriving/dp/0979777747).
