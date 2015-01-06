@@ -1,7 +1,5 @@
-wheezy-world
+Chaos Engine
 ============
-
-http://piq.codeus.net/draw
 
 ##NPC Logic:
 
@@ -76,6 +74,23 @@ When an NPC runs through its **cycle** function it now will weight in the amount
 If the pleasure delta is positive it will be more likely to do the action.
 If the pleasure delta is negitive it will be less likely to do the action.
 
+####InputNode - Boredom:
+An input Node called 'boredom' could be created when an NPC has not done an action in a while and has energy.
+Different NPC's would get Bored at varying amounts of cycles(some get bored quicker, some not so much).
+
+If the NPC gets boered it would then try to occupy it self by creating new inputNode>outputNode's.
+This allows for an increase in complexity of behavior faster then just when the NPC is spawned.
+
+Sample Output Nodes:
+* Eat x in inventory
+* Explore
+* Attack NPC
+* Interact with x
+
+####OutputNode - Observe:
+Observing allows an NPC to watch other NPCs in their sight radius and depending on their
+
+
 
 
 ####Relationships:
@@ -130,9 +145,68 @@ Theoretically NPC's that dont attack their families and nuture them will increas
 
 NPCs that neglect or attach their bloodline will quickly die out
 
+##Spawning NPC's:
+Like in life it will take 2 NPCs to create a child NPC.
+
+###NPC's Many Brains:
+Taking a note from the book [Brain Rules](http://www.amazon.com/Brain-Rules-Principles-Surviving-Thriving/dp/0979777747).
+
+####1st Brain Behaviors:
+First brain manages life support. For our purposes here NPC's can still breathe and handle basic plumbing on their own.
+That logic will probablly be hard coded for now and not subject to Evolution.
+####2nd Brain Behaviors:
+2nd brain covers our more animalistic instaicts
+
+* Feeding
+* Fighting
+* Flighting(run away ~Monty Python reference)
+* Fucking(Mating)
+
+
+I have created a class [LogicFactory](./lib/engine/logic/logic_factory.js) that will have some basic survival logic nodes.
+I realize that predefining this makes the evolution aspect less organic.
+That is why I intend to create anomalies and only teach some when passed through the factory.
+Some NPC might get more agressive behaviors from the factory and be eager to fight.
+Some NPCs might get more evasive behaviors from the factory
+
+Also when 2 parents create a child we may not pass all of these logic nodes to the child so their behavior wont be bound to it.
+
+Finally these 2nd brain behaviors are the only logicNodes directly passed to the child at birth.
+
+#####Mirror Neurons:
+I also intend to play with adding two behaviors to each child at birth:
+
+* If parent is near > follow it
+* If parent is near > observe it
+
+Ideally this will encourage the child to follow the parent.
+Now the child could get stuck in a loop following the parent everywhere like a lemings for its entire life.
+This can be mitigated by a couple of things such as:
+
+* Parents initially have more energy then the child. The child will have to rest and might lose track of the parent during this rest state.
+* The parent goes to sleep and the child gets boerd of observing the parent sleeping then runs off.
+* Parents might have logic that says "If an NPC is attacking then command the child to evade". The chances of this generating randomly is not great but I might jump forward and add it to the LogicFactory.survival_101
+* The parent dies
+
+
+####3rd Brain Behaviors:
+3rd brain behaviors is what makes us intelligent. They are learned behaviors.
+
+* Using inventory_items. Ex: Don't ingest grenades
+* NPCTarget specific behaviors. Ex: Evading a specific person.
+
+These behaviors are NOT passed down to a child at birth. They are learned through the following ways:
+* Observing
+* Trying Random things when bored
+* Some one trys to teach you because they had an expirence of their own.
+
 ##Sprites:
 Because I have no money and no time and no skill and I love the Fallout series.
 
 [http://www.spriters-resource.com/pc_computer/fallout2/](http://www.spriters-resource.com/pc_computer/fallout2/)
 
 [http://www.spriters-resource.com/pc_computer/fallouttactics/](http://www.spriters-resource.com/pc_computer/fallouttactics/)
+
+##Random Other Resources:
+
+http://piq.codeus.net/draw
