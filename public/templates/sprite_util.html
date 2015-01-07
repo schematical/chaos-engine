@@ -17,20 +17,21 @@
                 <option ng-value="'tile'">Tile</option>
                 <option ng-value="'animate'">Animate</option>
             </select>
-            <div ng-if="mode=='tile'">
+            <div ng-show="mode=='tile'">
                 <button ng-click="tile();">Tile</button>
             </div>
-            <div ng-if="mode=='animate'">
+            <div ng-show="mode=='animate'">
                 Type:<input type="text" ng-model="type" /><br>
                 State:<input type="text" ng-model="state" /><br>
                 <!--<button ng-click="tile();">Tile</button>-->
-                Facing:
-                <select ng-model="facing">
-                    <option ng-value="'up'">Up</option>
-                    <option ng-value="'down'">Down</option>
-                    <option ng-value="'left'">Left</option>
-                    <option ng-value="'right'">Right</option>
+                Facing({{ facing }}):
+                <select ng-model="facing" ng-options="dir as dir for dir in ['up','down','left','right']">
+                    <option value="'up'">Up</option>
+                    <option value="'down'">Down</option>
+                    <option value="'left'">Left</option>
+                    <option value="'right'">Right</option>
                 </select>
+                <button ng-disabled="!image" ng-click="addFrame();">Add Frame</button>
             </div>
             <br>
             Height:<input ng-model='selector_height' type="number"><br>

@@ -340,71 +340,6 @@ angular.module('chaos_engine')
 			}
 		]
 	)
-	.factory(
-		'ObjectCache',
-		[
-			'SpriteSheet',
-			function (SpriteSheet) {
-				var _ObjectCache = {
-					cached: {},
-					loadImage: function (type, state, callback) {
-
-						if (_ObjectCache.cached[type] && _ObjectCache.cached[type][state]) {
-							return callback(null, _ObjectCache.cached[type][state]);
-						}
-						var image = new Image();
-						if (!_ObjectCache.cached[type]) {
-							_ObjectCache.cached[type] = {};
-						}
-						_ObjectCache.cached[type][state] = image;
-
-						image.src = _ObjectCache.map(type, state);
-						image.onload = function () {
-							return callback(null, _ObjectCache.cached[type][state]);
-						}
-					},
-					map: function (type, state) {
-
-
-						return '/imgs/' + type + '/' + state + '.jpg';
-					},
-					preload: function () {
-
-
-						var spriteSheet1 = new SpriteSheet({
-							img_src: '/imgs/tiles/prison_floor.png',
-							tile_width: 75,
-							tile_height: 38
-						});
-						spriteSheet1.load(function (err, image) {
-							for (var x = 0; x < 4; x++) {
-								for (var y = 0; y < 10; y++) {
-									var i = (x * 10) + y;
-
-									_ObjectCache.cached['tile-' + i] = {};
-									_ObjectCache.cached['tile-' + i]['default'] = spriteSheet1.getTile(x, y);
-								}
-							}
-						});
-						_ObjectCache.cached['player-1'] = {};
-						_ObjectCache.cached['player-1']['default'] = new Image();
-						_ObjectCache.cached['player-1']['default'].src = '/imgs/player/default.bmp';
-
-						_ObjectCache.cached['the_blind_dog'] = {};
-						_ObjectCache.cached['the_blind_dog']['default'] = new Image();
-						_ObjectCache.cached['the_blind_dog']['default'].src = '/imgs/npcs/the_blind_dog/default.bmp';
-
-						_ObjectCache.cached['beretta'] = {};
-						_ObjectCache.cached['beretta']['default'] = new Image();
-						_ObjectCache.cached['beretta']['default'].src = '/imgs/objects/gun.bmp';
-
-
-					}
-				}
-				return _ObjectCache;
-			}
-		]
-	)
 	.service('InventoryModal', ['ObjectCache', function (ObjectCache) {
 		var _InventoryModal = function (data) {
 			this.ingest = data.ingest;
@@ -519,9 +454,10 @@ angular.module('chaos_engine')
 	.factory('AnimationFactory', [
 		function(){
 			var _AnimationFactory = function(options){
-				this._frame_ct = 0;
-				this.screen = options.screen;
+				this._frame_ct = -1;
+				//this.screen = options.screen;
 				this.frames = options.frames;
+				this.image = options.image;
 				return this;
 			}
 			/**
@@ -530,6 +466,11 @@ angular.module('chaos_engine')
 			_AnimationFactory.prototype.render = function(){
 
 				this._frame_ct += 1;
+				if(this._frame_ct > this.frames.length){
+					this._frame_ct = 0;
+				}
+				var frame = this.frame[this._frame_ct];
+				return frame.data_url;
 			}
 			return _AnimationFactory;
 		}

@@ -6,14 +6,14 @@ angular.module('sprite_util')
 		function($document,$scope, $cookies){
 			$scope.data_obj_rendered = $cookies.data_obj || '{}';
 			try{
-				$scope.data_obj = JSON.parse($scope.data_obj_renedered);
+				$scope.data_obj = JSON.parse($scope.data_obj_rendered);
 			}catch(e){
 				$scope.data_obj = {}
 			}
 			$scope.mode = $cookies.mode || 'animate';
 			$scope.jump = $cookies.jump || true;
 			$scope.type = $cookies.type  || 'player-1';
-			$scope.facing = $cookies.facing  || 'down';
+			$scope.facing = $cookies.facing  || 'up';
 			$scope.state = $cookies.state  || 'default';
 			$scope.selector_width = ($cookies.selector_width && parseInt($cookies.selector_width))  || 75;
 			$scope.selector_height = ($cookies.selector_height && parseInt($cookies.selector_height)) || 38;
@@ -24,10 +24,10 @@ angular.module('sprite_util')
 			$scope.mouseEndPos = {x:0, y:0};
 			$scope.fresh_obj = function(){
 				$scope.data_obj = {};
-				$scope.data_obj_renedered = JSON.stringify($scope.data_obj);
+				$scope.data_obj_rendered = JSON.stringify($scope.data_obj);
 			}
 			$scope.updateCookies = function(){
-				$cookies.data_obj = $scope.data_obj_renedered;
+				$cookies.data_obj = $scope.data_obj_rendered;
 				$cookies.mode = $scope.mode;
 				$cookies.facing = $scope.facing;
 				$cookies.type = $scope.type;
@@ -70,8 +70,19 @@ angular.module('sprite_util')
 				//$rootScope.$broadcast('keypress', e, key);
 				$scope.keypress_handeler(key);
 			});
+			$scope.$watch(
+				function(){
+					return $scope.data_obj_rendered != JSON.stringify($scope.data_obj);
+				},
+				function(){
+					$scope.data_obj_rendered = JSON.stringify($scope.data_obj);
+					$scope.updateCookies();
+				}
+			);
 			$scope.$watch('mode', function(){ $scope.updateCookies();  });
-			$scope.$watch('facing', function(){ $scope.updateCookies();  });
+			$scope.$watch('type', function(){ console.log($scope.type); $scope.updateCookies();  });
+			$scope.$watch('state', function(){ console.log($scope.state); $scope.updateCookies();  });
+			$scope.$watch('facing', function(){ console.log($scope.facing); $scope.updateCookies();  });
 			$scope.$watch('selector_x', function(){ $scope.updateCookies(); $scope.renderSelected(); });
 			$scope.$watch('selector_y', function(){ $scope.updateCookies(); $scope.renderSelected(); });
 			$scope.$watch('selector_height', function(){ $scope.updateCookies(); $scope.renderSelected(); });
@@ -155,9 +166,49 @@ angular.module('sprite_util')
 							$scope.selector_y -= 1;//$scope.selector_width;
 						}
 					break;
+					case('enter'):
+						$scope.addFrame();
+					break;
 
 				}
 				$scope.$digest();
+			}
+			$scope.addFrame = function(){
+				var new_canvas = angular.element('<canvas width="' + $scope.selector_width + '" height="' + $scope.selector_height + '"></canvas>');
+				var new_context = new_canvas[0].getContext('2d');
+				new_context.drawImage(
+					$scope.image,
+					$scope.selector_x,
+					$scope.selector_y,
+					$scope.selector_width,
+					$scope.selector_height
+				)
+				var data_url = new_canvas[0].toDataURL();
+
+
+
+				if(!$scope.data_obj[$scope.type]){
+					$scope.data_obj[$scope.type] = {};
+				}
+				if(!$scope.data_obj[$scope.type][$scope.state]){
+					$scope.data_obj[$scope.type][$scope.state] = {};
+				}
+				if(!$scope.data_obj[$scope.type][$scope.state][$scope.facing]){
+					$scope.data_obj[$scope.type][$scope.state][$scope.facing] = {};
+				}
+				if(!$scope.data_obj[$scope.type][$scope.state][$scope.facing].frames){
+					$scope.data_obj[$scope.type][$scope.state][$scope.facing].frames = [];
+				}
+				$scope.data_obj[$scope.type][$scope.state][$scope.facing].src =  $scope.url;
+
+				$scope.data_obj[$scope.type][$scope.state][$scope.facing].frames.push({
+					x:$scope.selector_x,
+					y:$scope.selector_y,
+					width:$scope.selector_width,
+					height:$scope.selector_height,
+					data_url:data_url
+				});
+
 			}
 			$scope.make_transparent = function(){
 				var imageData = $scope.spriteContext.getImageData(0,0, $scope.image.width, $scope.image.height);
