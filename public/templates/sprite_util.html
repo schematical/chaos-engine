@@ -13,7 +13,25 @@
             <h4>Enter Sprite URL</h4>
             <input ng-model='url' type="text">
             <button ng-click="load_image();">Load</button>
-            <button ng-click="tile();">Tile</button>
+            <select ng-model="mode">
+                <option ng-value="'tile'">Tile</option>
+                <option ng-value="'animate'">Animate</option>
+            </select>
+            <div ng-if="mode=='tile'">
+                <button ng-click="tile();">Tile</button>
+            </div>
+            <div ng-if="mode=='animate'">
+                Type:<input type="text" ng-model="type" /><br>
+                State:<input type="text" ng-model="state" /><br>
+                <!--<button ng-click="tile();">Tile</button>-->
+                Facing:
+                <select ng-model="facing">
+                    <option ng-value="'up'">Up</option>
+                    <option ng-value="'down'">Down</option>
+                    <option ng-value="'left'">Left</option>
+                    <option ng-value="'right'">Right</option>
+                </select>
+            </div>
             <br>
             Height:<input ng-model='selector_height' type="number"><br>
             Width:<input ng-model='selector_width' type="number"><br>
@@ -23,9 +41,14 @@
             <input ng-model='selected_color' type="text">
             <button ng-click="make_transparent();">Transparent</button>
             <button ng-click="save_binary();">Save</button>
+            <button ng-click="fresh_obj();">Clear</button>
             <br>
-            <canvas id="sprite_canvas"></canvas>
-            <textarea ng-model="data_obj_rendered" cols="100" rows="10"></textarea>
+            <textarea ng-model="data_obj_rendered" cols="50" rows="5" readonly></textarea>
+            <br>
+            <div class="canvas-holder">
+                <canvas id="sprite_canvas"></canvas>
+            </div>
+
 
         </div>
 

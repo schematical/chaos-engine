@@ -1,41 +1,112 @@
 angular.module('sprite_util')
 .controller('SpriteUtilController', [
+		'$document',
 		'$scope',
-		function($scope){
-			$scope.spriteCanvas = document.getElementById('sprite_canvas');
+		'$cookies',
+		function($document,$scope, $cookies){
+			$scope.data_obj_rendered = $cookies.data_obj || '{}';
+			try{
+				$scope.data_obj = JSON.parse($scope.data_obj_renedered);
+			}catch(e){
+				$scope.data_obj = {}
+			}
+			$scope.mode = $cookies.mode || 'animate';
+			$scope.jump = $cookies.jump || true;
+			$scope.type = $cookies.type  || 'player-1';
+			$scope.facing = $cookies.facing  || 'down';
+			$scope.state = $cookies.state  || 'default';
+			$scope.selector_width = ($cookies.selector_width && parseInt($cookies.selector_width))  || 75;
+			$scope.selector_height = ($cookies.selector_height && parseInt($cookies.selector_height)) || 38;
+			$scope.selector_x = ($cookies.selector_x && parseInt($cookies.selector_x)) || 0;
+			$scope.selector_y = ($cookies.selector_y && parseInt($cookies.selector_y)) || 0;
+			$scope.url = $cookies.url || '/imgs/npcs/dogmeat.gif';
+			$scope.mouseStartPos = {x:0, y:0};
+			$scope.mouseEndPos = {x:0, y:0};
+			$scope.fresh_obj = function(){
+				$scope.data_obj = {};
+				$scope.data_obj_renedered = JSON.stringify($scope.data_obj);
+			}
+			$scope.updateCookies = function(){
+				$cookies.data_obj = $scope.data_obj_renedered;
+				$cookies.mode = $scope.mode;
+				$cookies.facing = $scope.facing;
+				$cookies.type = $scope.type;
+				$cookies.state = $scope.state;
+				$cookies.jump = $scope.jump;
+				$cookies.selector_width = $scope.selector_width;
+				$cookies.selector_height = $scope.selector_height;
+				$cookies.selector_x = $scope.selector_x;
+				$cookies.selector_y = $scope.selector_y;
+				$cookies.url = $scope.url;
 
-			$scope.spriteContext = $scope.spriteCanvas.getContext("2d");
+			}
+			$scope.mousedown_listener = function(evt) {
+				$scope.mouseStartPos = $scope.getMousePos($scope.spriteCanvas, evt);
 
-			$scope.spriteCanvas.addEventListener('mousedown', function(evt) {
-				var mousePos = $scope.getMousePos($scope.spriteCanvas, evt);
-				var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
 				//console.log(message);
-				var pixel_data = $scope.spriteContext.getImageData(mousePos.x, mousePos.y, 1, 1);
+				var pixel_data = $scope.spriteContext.getImageData($scope.mouseStartPos.x, $scope.mouseStartPos.y, 1, 1);
 				$scope.selected_color = pixel_data;
 				$scope.$digest();
-			}, false);
+			}
+			$scope.mouseup_listener = function(evt){
+				$scope.mouseEndPos = $scope.getMousePos($scope.spriteCanvas, evt);
 
-			$scope.selector_width = 75;
-			$scope.selector_height = 38;
-			$scope.selector_x = 0;
-			$scope.selector_y = 0;
-			$scope.url = '/imgs/tiles/prison_floor.png';
+				$scope.selector_x = $scope.mouseStartPos.x;
+				$scope.selector_y = $scope.mouseStartPos.y;
+				$scope.selector_width = $scope.mouseEndPos.x - $scope.mouseStartPos.x;
+				$scope.selector_height = $scope.mouseEndPos.y - $scope.mouseStartPos.y;
+				$scope.$digest();
+
+			}
+			$document.bind('keypress', function (e) {
+				var key = null;
+				switch (e.which) {
+					case(13):
+						key = 'enter';
+						break;
+					default:
+						key = String.fromCharCode(e.which);
+				}
+				//$rootScope.$broadcast('keypress', e, key);
+				$scope.keypress_handeler(key);
+			});
+			$scope.$watch('mode', function(){ $scope.updateCookies();  });
+			$scope.$watch('facing', function(){ $scope.updateCookies();  });
+			$scope.$watch('selector_x', function(){ $scope.updateCookies(); $scope.renderSelected(); });
+			$scope.$watch('selector_y', function(){ $scope.updateCookies(); $scope.renderSelected(); });
+			$scope.$watch('selector_height', function(){ $scope.updateCookies(); $scope.renderSelected(); });
+			$scope.$watch('selector_width', function(){ $scope.updateCookies(); $scope.renderSelected(); });
 			$scope.load_image = function(){
 				$scope.image = new Image();
 				$scope.image.onload = $scope.handel_load_image;
 				$scope.image.src = $scope.url;
 			}
 			$scope.getMousePos = function(canvas, evt) {
-				var rect = $scope.spriteCanvas.getBoundingClientRect();
+				var rect = $scope.spriteCanvas[0].getBoundingClientRect();
 				return {
 					x: evt.clientX - rect.left,
 					y: evt.clientY - rect.top
 				};
 			}
+
 			$scope.handel_load_image = function(){
 				$scope.render();
 			}
 			$scope.render = function(){
+				if(!$scope.image){
+					return;
+				}
+				$scope.spriteCanvas = angular.element('<canvas id="sprite_canvas" height="' + $scope.image.height +  '"  width="' + $scope.image.width + '"></canvas>');
+
+				angular.element(document.getElementById('sprite_canvas')).replaceWith($scope.spriteCanvas);
+
+				$scope.spriteContext = $scope.spriteCanvas[0].getContext("2d");
+
+				$scope.spriteCanvas[0].addEventListener('mousedown', $scope.mousedown_listener, false);
+				$scope.spriteCanvas[0].addEventListener('mouseup', $scope.mouseup_listener, false);
+				//Clear Canvis
+
+
 				$scope.spriteContext.clearRect(
 					0,
 					0,
@@ -50,7 +121,44 @@ angular.module('sprite_util')
 					$scope.image.height
 				)
 			}
+			$scope.keypress_handeler = function(key){
+				switch(key){
+					case('d'):
+						//Hop right
+						if($scope.jump){
+							$scope.selector_x += $scope.selector_width;
+						}else{
+							$scope.selector_x += 1;//$scope.selector_width;
+						}
+					break;
+					case('a'):
+						//Hop left
+						if($scope.jump){
+							$scope.selector_x -= $scope.selector_width;
+						}else{
+							$scope.selector_x -= 1;//$scope.selector_width;
+						}
+					break;
+					case('s'):
+						//Hop down
+						if($scope.jump){
+							$scope.selector_y += $scope.selector_height;
+						}else{
+							$scope.selector_y += 1;//$scope.selector_width;
+						}
+					break;
+					case('w'):
+						//Hop left
+						if($scope.jump){
+							$scope.selector_y -= $scope.selector_height;
+						}else{
+							$scope.selector_y -= 1;//$scope.selector_width;
+						}
+					break;
 
+				}
+				$scope.$digest();
+			}
 			$scope.make_transparent = function(){
 				var imageData = $scope.spriteContext.getImageData(0,0, $scope.image.width, $scope.image.height);
 				var data = imageData.data;
@@ -108,7 +216,10 @@ angular.module('sprite_util')
 			}
 			$scope.tile = function(){
 				$scope.render();
-				$scope.spriteContext.fillStyle = "#000000";
+				if(!$scope.image){
+					return false;
+				}
+				$scope.spriteContext.fillStyle = "#00ff00";
 				for(var x = 0; x < $scope.image.width; x += $scope.selector_width){
 					for(var y = 0; y < $scope.image.height; y += $scope.selector_height){
 
@@ -120,6 +231,22 @@ angular.module('sprite_util')
 						);
 					}
 				}
+			}
+			$scope.renderSelected = function(){
+
+				$scope.render();
+				if(!$scope.image){
+					return false;
+				}
+				$scope.spriteContext.strokeStyle = "#00ff00";
+
+				$scope.spriteContext.strokeRect(
+					$scope.selector_x,
+					$scope.selector_y,
+					$scope.selector_width,
+					$scope.selector_height
+				);
+
 			}
 		}
 	]

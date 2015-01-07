@@ -515,4 +515,22 @@ angular.module('chaos_engine')
 				});
 			}
 		};
-	}]);
+	}])
+	.factory('AnimationFactory', [
+		function(){
+			var _AnimationFactory = function(options){
+				this._frame_ct = 0;
+				this.screen = options.screen;
+				this.frames = options.frames;
+				return this;
+			}
+			/**
+			 * Returns an image in data url form
+			 */
+			_AnimationFactory.prototype.render = function(){
+
+				this._frame_ct += 1;
+			}
+			return _AnimationFactory;
+		}
+	]);
