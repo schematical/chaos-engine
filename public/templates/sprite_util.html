@@ -20,6 +20,8 @@
                 Type:<input type="text" ng-model="type" /><br>
                 <button ng-click="tile();">Tile</button>
                 <button ng-click="tileSplit();">Tile Split</button>
+                <select ng-model="selected_data_obj" ng-options="option_data_obj as option_data_obj.type for option_data_obj in data_obj_arr"></select>
+                <img height='selector_height' width='selector_width' src="{{ selected_data_obj.src }}" />
             </div>
             <div ng-show="mode=='animate'">
                 Type:<input type="text" ng-model="type" /><br>

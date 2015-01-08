@@ -27,7 +27,7 @@ angular.module('sprite_util')
 				$scope.data_obj_rendered = JSON.stringify($scope.data_obj);
 			}
 			$scope.updateCookies = function(){
-				$cookies.data_obj = $scope.data_obj_rendered;
+				//$cookies.data_obj = $scope.data_obj_rendered;
 				$cookies.mode = $scope.mode;
 				$cookies.url = $scope.url;
 				$cookies.facing = $scope.facing;
@@ -77,6 +77,10 @@ angular.module('sprite_util')
 				},
 				function(){
 					$scope.data_obj_rendered = JSON.stringify($scope.data_obj);
+					$scope.data_obj_arr = [];
+					for(var i in $scope.data_obj){
+						$scope.data_obj_arr.push($scope.data_obj[i]);
+					}
 					$scope.updateCookies();
 				}
 			);
@@ -287,11 +291,18 @@ angular.module('sprite_util')
 			}
 			$scope.tileSplit = function(){
 				var i = 0;
+
+				var new_canvas = angular.element('<canvas width="' + $scope.selector_width + '" height="' + $scope.selector_height + '"></canvas>');
+				var new_context = new_canvas[0].getContext('2d');
 				for(var x = 0; x < $scope.image.width; x += $scope.selector_width){
 					for(var y = 0; y < $scope.image.height; y += $scope.selector_height){
 
-						var new_canvas = angular.element('<canvas width="' + $scope.selector_width + '" height="' + $scope.selector_height + '"></canvas>');
-						var new_context = new_canvas[0].getContext('2d');
+						$scope.spriteContext.clearRect(
+							x,
+							y,
+							$scope.selector_width,
+							$scope.selector_height
+						);
 						new_context.drawImage(
 							$scope.image,
 							x,
@@ -299,8 +310,12 @@ angular.module('sprite_util')
 							$scope.selector_width,
 							$scope.selector_height
 						)
+
+
 						var data_url = new_canvas[0].toDataURL();
-						$scope.data_obj[$scope.type + '-' + i] = {
+						var type = $scope.type + '-' + i;
+						$scope.data_obj[type] = {
+							type:type,
 							src:data_url
 						}
 						i += 1;
