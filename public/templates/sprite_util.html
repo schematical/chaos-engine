@@ -17,7 +17,9 @@
 
             </select>
             <div ng-show="mode=='tile'">
+                Type:<input type="text" ng-model="type" /><br>
                 <button ng-click="tile();">Tile</button>
+                <button ng-click="tileSplit();">Tile Split</button>
             </div>
             <div ng-show="mode=='animate'">
                 Type:<input type="text" ng-model="type" /><br>

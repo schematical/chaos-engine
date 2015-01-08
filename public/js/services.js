@@ -161,24 +161,41 @@ angular.module('chaos_engine')
 		'WorldCache',
 		[
 			'ObjectCache',
+			'TileCache',
 
-			function (ObjectCache) {
+			function (ObjectCache, TileCache) {
 				var _WorldCache = {
 					world: null,
 					init: function (data) {
 						//First init the objects
 						_WorldCache.world = {
-							objects:[]
+							objects:{},
+							tiles:{}
 						}
 						for(var object_id in data.objects){
 							var instance = ObjectCache.createNewObjectInstance(data.objects[object_id]);
-							_WorldCache.world.objects[instance.id] = instance;
+							if(!instance){
+								console.log("No object class for:" + object_id);
+							}else{
+								_WorldCache.world.objects[instance.id] = instance;
+							}
+						}
+						//Quick clone for now:
+						for(var x in  data.tiles){
+							if(!_WorldCache.world.tiles[x]){
+								_WorldCache.world.tiles[x] = {}
+							}
+							for(var y in  data.tiles[x]){
+								_WorldCache.world.tiles[x][y] = TileCache.initTileInstance(data.tiles[x][y]);
+							}
 						}
 
 					},
 					update: function (data) {
 						for (var object_id in data.objects) {
-							_WorldCache.world.objects[object_id].update(data.objects[object_id]);
+							if(_WorldCache.world.objects[object_id]){
+								_WorldCache.world.objects[object_id].update(data.objects[object_id]);
+							}
 						}
 					}
 				}
@@ -191,8 +208,9 @@ angular.module('chaos_engine')
 		[
 			'ObjectCache',
 			'WorldCache',
+			'TileCache',
 
-			function (ObjectCache, WorldCache) {
+			function (ObjectCache, WorldCache, TileCache) {
 				var _GameScreen = function (options) {
 					this.view_radius = 40;
 					this.view_port = {
@@ -260,23 +278,29 @@ angular.module('chaos_engine')
 								if (world.tiles[x][y]) {
 
 									var tile = world.tiles[x][y];
-
-									ObjectCache.loadImage(tile.type, tile.state, function (err, image) {
-										var draw_x = (x - _this.view_port.x) + _this.view_radius / 2;
+									_this.gameContext.drawImage(
+										tile.image,
+										0,
+										0,
+										_this.tile_width,
+										_this.tile_height
+									);
+									//ObjectCache.loadImage(tile.type, tile.state, function (err, image) {
+									/*	var draw_x = (x - _this.view_port.x) + _this.view_radius / 2;
 										var draw_y = (y - _this.view_port.y) + _this.view_radius / 2;
 										_this.gameContext.drawImage(
-											image,
+											tile.image,
 											(draw_x * _this.tile_width) - (_this.tile_width * draw_y/2),
 											(draw_y * _this.tile_height) - (_this.tile_height * draw_y/2),
 											_this.tile_width,
 											_this.tile_height
-										);
-									});
+										);*/
+									//});
 								}
 							}
 						}
 					}
-
+					return;
 					for (var i in world.objects) {
 						if (world.objects[i]) {
 

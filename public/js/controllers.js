@@ -29,6 +29,7 @@ angular.module('sprite_util')
 			$scope.updateCookies = function(){
 				$cookies.data_obj = $scope.data_obj_rendered;
 				$cookies.mode = $scope.mode;
+				$cookies.url = $scope.url;
 				$cookies.facing = $scope.facing;
 				$cookies.type = $scope.type;
 				$cookies.state = $scope.state;
@@ -79,6 +80,7 @@ angular.module('sprite_util')
 					$scope.updateCookies();
 				}
 			);
+			$scope.$watch('url', function(){ $scope.updateCookies();  });
 			$scope.$watch('mode', function(){ $scope.updateCookies();  });
 			$scope.$watch('type', function(){ console.log($scope.type); $scope.updateCookies();  });
 			$scope.$watch('state', function(){ console.log($scope.state); $scope.updateCookies();  });
@@ -282,6 +284,33 @@ angular.module('sprite_util')
 						);
 					}
 				}
+			}
+			$scope.tileSplit = function(){
+				var i = 0;
+				for(var x = 0; x < $scope.image.width; x += $scope.selector_width){
+					for(var y = 0; y < $scope.image.height; y += $scope.selector_height){
+
+						var new_canvas = angular.element('<canvas width="' + $scope.selector_width + '" height="' + $scope.selector_height + '"></canvas>');
+						var new_context = new_canvas[0].getContext('2d');
+						new_context.drawImage(
+							$scope.image,
+							x,
+							y,
+							$scope.selector_width,
+							$scope.selector_height
+						)
+						var data_url = new_canvas[0].toDataURL();
+						$scope.data_obj[$scope.type + '-' + i] = {
+							src:data_url
+						}
+						i += 1;
+
+
+					}
+				}
+				//$scope.$digest();
+
+
 			}
 			$scope.renderSelected = function(){
 
