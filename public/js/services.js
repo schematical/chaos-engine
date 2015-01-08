@@ -278,15 +278,9 @@ angular.module('chaos_engine')
 								if (world.tiles[x][y]) {
 
 									var tile = world.tiles[x][y];
-									_this.gameContext.drawImage(
-										tile.image,
-										0,
-										0,
-										_this.tile_width,
-										_this.tile_height
-									);
+
 									//ObjectCache.loadImage(tile.type, tile.state, function (err, image) {
-									/*	var draw_x = (x - _this.view_port.x) + _this.view_radius / 2;
+										var draw_x = (x - _this.view_port.x) + _this.view_radius / 2;
 										var draw_y = (y - _this.view_port.y) + _this.view_radius / 2;
 										_this.gameContext.drawImage(
 											tile.image,
@@ -294,7 +288,7 @@ angular.module('chaos_engine')
 											(draw_y * _this.tile_height) - (_this.tile_height * draw_y/2),
 											_this.tile_width,
 											_this.tile_height
-										);*/
+										);
 									//});
 								}
 							}

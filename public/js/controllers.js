@@ -308,6 +308,10 @@ angular.module('sprite_util')
 							x,
 							y,
 							$scope.selector_width,
+							$scope.selector_height,
+							0,
+							0,
+							$scope.selector_width,
 							$scope.selector_height
 						)
 
