@@ -103,7 +103,8 @@ angular.module('chaos_engine')
 		'$q',
 		'ObjectInstance',
 		'ObjectCacheData',
-		function ($q, ObjectInstance, ObjectCacheData) {
+		'AnimationFactory',
+		function ($q, ObjectInstance, ObjectCacheData, AnimationFactory) {
 			var _ObjectClass = function (options) {
 				this.cache = options.cache;
 				this.type = options.type;
@@ -130,7 +131,13 @@ angular.module('chaos_engine')
 			 * @param facing
 			 */
 			_ObjectClass.prototype.getRenderable = function (state, facing) {
-
+				if(!this.data[state]){
+					state = 'default';
+				}
+				if(this.data[state] && this.data[state][facing]){
+					return new AnimationFactory(this.data[state][facing]);
+				}
+				return null;
 			}
 			/**
 			 * Creates a new instance of the ObjectClass
@@ -158,16 +165,29 @@ angular.module('chaos_engine')
 		function ($q) {
 			var _ObjectInstance = function (options) {
 				this.class = options.class;
-				this.object = options.object;
+				this.update(options.object);
+				//this.object = options.object;
 				this.local_state = this.object.state;
 				this.animation = null;
 				return this;
+			}
+			_ObjectInstance.prototype = {
+				get x(){
+					return this.object.x;
+				},
+				get y(){
+					return this.object.y;
+				}
 			}
 			//TODO: Probably define getters for (type, x,y,z,state, etc)
 			/**
 			 * Returns the correct frame for its state... hopefully
 			 */
 			_ObjectInstance.prototype.render = function () {
+				if(!this.animation){
+					console.log("No animation found for:" + this.class.type + ' - ' + this.object.state+ ' - ' + this.object.facing);
+					return null;
+				}
 				return this.animation.render();
 			}
 			/**
@@ -176,15 +196,16 @@ angular.module('chaos_engine')
 			_ObjectInstance.prototype.update = function (instance_data) {
 				//First check to see the vars that trigger an animation change
 				if (
+					(!this.object) ||
 					(instance_data.state != this.object.state) ||
-						(instance_data.facing != this.object.facing)
-					) {
-					this.local_state = this.object.state;
+					(instance_data.facing != this.object.facing)
+				) {
+					this.local_state = instance_data.state;
 					//Trigger new animation
 
 					this.animation = this.class.getRenderable(
-						this.object.local_state,
-						this.object.facing
+						this.local_state,
+						instance_data.facing
 					);
 
 				} else if (
@@ -193,8 +214,8 @@ angular.module('chaos_engine')
 					) {
 					this.local_state = 'walking';
 					this.animation = this.class.getRenderable(
-						this.object.state,
-						this.object.facing
+						this.state,
+						instance_data.facing
 					);
 				}
 				this.object = instance_data;

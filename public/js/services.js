@@ -177,7 +177,7 @@ angular.module('chaos_engine')
 							if(!instance){
 								console.log("No object class for:" + object_id);
 							}else{
-								_WorldCache.world.objects[instance.id] = instance;
+								_WorldCache.world.objects[object_id] = instance;
 							}
 						}
 						//Quick clone for now:
@@ -294,13 +294,18 @@ angular.module('chaos_engine')
 							}
 						}
 					}
-					return;
+
 					for (var i in world.objects) {
 						if (world.objects[i]) {
 
 							var object = world.objects[i];
 							if (!object.detached) {
-								ObjectCache.loadImage(object.type, object.state, function (err, image) {
+
+								var data_url = object.render();
+								if(data_url){
+									var image = new Image();
+									image.src = data_url;
+
 									var draw_x = (object.x - _this.view_port.x) + _this.view_radius / 2;
 									var draw_y = (object.y - _this.view_port.y) + _this.view_radius / 2;
 
@@ -312,7 +317,8 @@ angular.module('chaos_engine')
 										_this.tile_width/2,
 										_this.tile_width/2
 									);
-								});
+								}
+
 							}
 						}
 					}
