@@ -13,9 +13,8 @@
             <h4>Enter Sprite URL</h4>
             <input ng-model='url' type="text">
             <button ng-click="load_image();">Load</button>
-            <select ng-model="mode">
-                <option ng-value="'tile'">Tile</option>
-                <option ng-value="'animate'">Animate</option>
+            <select ng-model="mode" ng-options="select_mode as select_mode for select_mode in ['tile', 'animate']">
+
             </select>
             <div ng-show="mode=='tile'">
                 <button ng-click="tile();">Tile</button>
@@ -26,10 +25,10 @@
                 <!--<button ng-click="tile();">Tile</button>-->
                 Facing({{ facing }}):
                 <select ng-model="facing" ng-options="dir as dir for dir in ['up','down','left','right']">
-                    <option value="'up'">Up</option>
+         <!--           <option value="'up'">Up</option>
                     <option value="'down'">Down</option>
                     <option value="'left'">Left</option>
-                    <option value="'right'">Right</option>
+                    <option value="'right'">Right</option>-->
                 </select>
                 <button ng-disabled="!image" ng-click="addFrame();">Add Frame</button>
             </div>

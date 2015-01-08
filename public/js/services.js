@@ -155,22 +155,30 @@ angular.module('chaos_engine')
 		]
 	)
 /**
- * Caches world data for quicker socket communitication
+ * Caches world data for quicker socket comunitication
  */
 	.service(
 		'WorldCache',
 		[
+			'ObjectCache',
 
-
-			function () {
+			function (ObjectCache) {
 				var _WorldCache = {
 					world: null,
 					init: function (data) {
-						_WorldCache.world = data;
+						//First init the objects
+						_WorldCache.world = {
+							objects:[]
+						}
+						for(var object_id in data.objects){
+							var instance = ObjectCache.createNewObjectInstance(data.objects[object_id]);
+							_WorldCache.world.objects[instance.id] = instance;
+						}
+
 					},
 					update: function (data) {
 						for (var object_id in data.objects) {
-							_WorldCache.world.objects[object_id] = data.objects[object_id];
+							_WorldCache.world.objects[object_id].update(data.objects[object_id]);
 						}
 					}
 				}

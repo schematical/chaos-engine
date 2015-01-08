@@ -29,21 +29,31 @@ angular.module('chaos_engine')
 						_ObjectCache.cached_images[url] = image;
 					},
 					loadObject: function (type) {
-						//This actually creates proper animations and caches them
-						_ObjectCache.cached_objects[type] = new ObjectClass({
-							cache: this,
-							type: type
-						});
-						var promise = _ObjectCache.cached_objects[type].preload(ObjectCache);
-						return promise;
+						if(!_ObjectCache.cached_objects[type]){
+
+
+							//This actually creates proper animations and caches them
+							_ObjectCache.cached_objects[type] = new ObjectClass({
+								cache: this,
+								type: type
+							});
+						}
+						return _ObjectCache.cached_objects[type];
+
+					},
+					createNewObjectInstance:function(instance_data){
+
+						var objectClass = _ObjectCache.loadObject(instance_data.type);
+						var instance = objectClass.createNewInstance(instance_data);
+						return instance;
 					},
 					preload: function () {
 						//Iterate through the ObjectCacheData
-						var promisses = [];
+						/*var promisses = [];
 						for (var type in ObjectCacheData) {
 							promisses.push(_ObjectCache.loadObject(type));
 						}
-						return $q.all(promisses);
+						return $q.all(promisses);*/
 
 					}/*,
 					 old_preload: function () {
@@ -87,7 +97,7 @@ angular.module('chaos_engine')
 		'$q',
 		'ObjectInstance',
 		'ObjectCacheData',
-		function ($q, ObjectCacheData) {
+		function ($q, ObjectInstance, ObjectCacheData) {
 			var _ObjectClass = function (options) {
 				this.cache = options.cache;
 				this.type = options.type;
