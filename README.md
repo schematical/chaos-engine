@@ -15,6 +15,34 @@ inputs > outputs
 * commanded(command, By NPC Target)
 * stat change(stat, comparison, value) - (Example: Health Low, Energy Full, etc) - (Triggers evasion when dieing)
 
+####Random Notes on Inputs:
+#####Smell:
+It would be cool to have certain thins emit smells that could attract creatures(NPCs) with better smell and hearing, but worse vision.
+
+Objects could emit a certain smell for a range. Dead NPCs might emit a smell for 10 tiles starting 100 cycles after they are dead and incrasing.
+
+Ideally creatures would detect this smell and come to feed.
+
+Human NPCs that did not want to encounter creature NPCs  would dispose of the bodies or possibly use them as bait.
+
+#####Sound:
+Sound is another sense that could be added.
+Sound would travel faster but last much shorter durations then smell.
+NPCs moving would trigger sounds.
+NPCs attacking would trigger different distances and types of sounds depending on what is equipped.
+
+An NPCs reaction to sound might vary. Some might follow a sound and others might trigger an evade.
+It is even possible that an NPC might start to eat inventory items when they hear a sound. The dog and the bell expirment.
+
+Command Outputs would cary only over a certain amount of tiles and might trigger behaviors in NPCs they are not trying to command.
+#####Sight:
+Sight allows an NPC to detect any object/action on the tiles in a funnel in the direction they are facing.
+
+Variables:
+* Width: The amount of tiles wider the vision field gets with each tile further away from the NPC they can percive.
+* Distance: The amount of tiles in the direction the NPC is facing that the NPC can percive.
+
+
 
 ###Outputs:
 
@@ -120,6 +148,32 @@ The same pain pleasure scale maybe applied to NPCs.
 
 Eventually you could code a NPCTarget condition to find targets that have good or bad relationships with an NPC.
 
+
+####Relationship Memory:
+It might be a good idea to store ineractions and information in some type of relationship array
+
+~~~
+{
+    npc_id_a:[
+        { action:'gave', object:'inventory_object.food' },
+        { action:'attacked', object:'npc_id_c' },
+        { relationship: 'father' }
+    ],
+    npc_id_b:{
+        { relationship: 'boss' },
+        { action:'commanded.attack', object:'npc_id_c' },
+    },
+    npc_id_c:{
+         { action:'attacked', object:'my_npc_id' },
+         { action:'attacked', object:'npc_id_a' },
+    }
+}
+Just like human brains they can fill up. Weighting memories might be a good idea based on how strong the **pleasure delta event** might be important.
+Example attacking me will not be forgotten.
+Watching someone eat will be.
+Also weighting things permantly like flat out relationships(father, mother, child) etc might be important.
+ Low weighted interactions will be removed when the memory fills up.
+ The commonality of an event might be something to consider. How often do you see an NPC eat food?
 ####Teaching:
 It is possible that an NPC that feels stong pain/pleasuer and has a high number of occurences of an outcome might try and teach other NPCs.
 
