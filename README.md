@@ -287,6 +287,14 @@ Because I have no money and no time and no skill and I love the Fallout series.
 [http://www.spriters-resource.com/pc_computer/fallout2/](http://www.spriters-resource.com/pc_computer/fallout2/)
 
 [http://www.spriters-resource.com/pc_computer/fallouttactics/](http://www.spriters-resource.com/pc_computer/fallouttactics/)
+##Animations:
+//TODO: Make transparencies work with frame by frame animations
+
+//TODO: Make it do they only animate their default when then have been stopped for some time and that the screen doesnt render unless changes have happened.
+###Saving Animations:
+
+##Saving State:
+//Mongo DB
 
 ##Random Other Resources:
 

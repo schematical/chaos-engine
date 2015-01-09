@@ -35,6 +35,8 @@
                     <option value="'right'">Right</option>-->
                 </select>
                 <button ng-disabled="!image" ng-click="addFrame();">Add Frame</button>
+                <br>
+
             </div>
             <br>
             Height:<input ng-model='selector_height' type="number"><br>
@@ -48,6 +50,7 @@
             <button ng-click="fresh_obj();">Clear</button>
             <br>
             <textarea ng-model="data_obj_rendered" cols="50" rows="5" readonly></textarea>
+            <img height='selector_height' width='selector_width' src="{{ preview_image.src }}" />
             <br>
             <div class="canvas-holder">
                 <canvas id="sprite_canvas"></canvas>

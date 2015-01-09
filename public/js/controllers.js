@@ -357,6 +357,21 @@ angular.module('sprite_util')
 					$scope.selector_width,
 					$scope.selector_height
 				);
+				var new_canvas = angular.element('<canvas width="' + $scope.selector_width + '" height="' + $scope.selector_height + '"></canvas>');
+				var new_context = new_canvas[0].getContext('2d');
+				$scope.preview_image = new Image();
+				new_context.drawImage(
+					$scope.image,
+					$scope.selector_x,
+					$scope.selector_y,
+					$scope.selector_width,
+					$scope.selector_height,
+					0,
+					0,
+					$scope.selector_width,
+					$scope.selector_height
+				)
+				$scope.preview_image.src = new_canvas[0].toDataURL();
 
 			}
 		}

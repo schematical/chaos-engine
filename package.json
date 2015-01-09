@@ -14,6 +14,7 @@
 		"mkdirp":"*",
 		"socket.io":"*",
 		"async":"*",
-		"connect-multiparty":"*"
+		"connect-multiparty":"*",
+		"mongoose":"*"
 	}
 }

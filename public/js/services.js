@@ -294,8 +294,10 @@ angular.module('chaos_engine')
 									var tile = world.tiles[x][y];
 
 									//ObjectCache.loadImage(tile.type, tile.state, function (err, image) {
-										var draw_x = (x - _this.view_port.x) + _this.view_radius / 2;
-										var draw_y = (y - _this.view_port.y) + _this.view_radius / 2;
+										var draw_x = (x - _this.view_port.x) + _this.view_radius / 2 + focus_object.x_offset;
+										var draw_y = (y - _this.view_port.y) + _this.view_radius / 2 + focus_object.y_offset;
+										//console.log("x_offset:",focus_object.id, focus_object.x_offset);
+
 										_this.gameContext.drawImage(
 											tile.image,
 											(draw_x * _this.tile_width) - (_this.tile_width * draw_y/2),
@@ -318,8 +320,8 @@ angular.module('chaos_engine')
 								var image = object.render();
 								if(image){
 
-									var draw_x = (object.x - _this.view_port.x) + _this.view_radius / 2;
-									var draw_y = (object.y - _this.view_port.y) + _this.view_radius / 2;
+									var draw_x = (object.x - _this.view_port.x) + _this.view_radius / 2 - (object.x_offset - focus_object.x_offset);
+									var draw_y = (object.y - _this.view_port.y) + _this.view_radius / 2 - (object.y_offset  - focus_object.y_offset);
 
 
 									_this.gameContext.drawImage(
