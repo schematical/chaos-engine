@@ -237,6 +237,23 @@ angular.module('chaos_engine')
 					window.addEventListener('orientationchange', function () {
 						_this.resize()
 					}, false);
+					var _this = this;
+					window.addEventListener('mousedown', function(evt) {
+						var mouseStartPos = _this.getMousePos(e);
+						//Find Tile
+
+						//If tile has object on it move to then interact
+
+						//If tile does not have object just interact
+
+					});
+				}
+				_GameScreen.prototype.getMousePos = function(evt) {
+					var rect = this.gameCanvas.getBoundingClientRect();
+					return {
+						x: evt.clientX - rect.left,
+						y: evt.clientY - rect.top
+					};
 				}
 				_GameScreen.prototype.startRendering = function(){
 					if(this.timeout){
