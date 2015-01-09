@@ -301,10 +301,8 @@ angular.module('chaos_engine')
 							var object = world.objects[i];
 							if (!object.detached) {
 
-								var data_url = object.render();
-								if(data_url){
-									var image = new Image();
-									image.src = data_url;
+								var image = object.render();
+								if(image){
 
 									var draw_x = (object.x - _this.view_port.x) + _this.view_radius / 2;
 									var draw_y = (object.y - _this.view_port.y) + _this.view_radius / 2;
@@ -489,7 +487,12 @@ angular.module('chaos_engine')
 				this._frame_ct = -1;
 				//this.screen = options.screen;
 				this.frames = options.frames;
-				this.image = options.image;
+				for(var i in this.frames){
+					if(this.frames[i]){
+						this.frames[i].image = new Image();
+						this.frames[i].image.src = this.frames[i].data_url;
+					}
+				}
 				return this;
 			}
 			/**
@@ -498,11 +501,11 @@ angular.module('chaos_engine')
 			_AnimationFactory.prototype.render = function(){
 
 				this._frame_ct += 1;
-				if(this._frame_ct > this.frames.length){
+				if(this._frame_ct >= this.frames.length){
 					this._frame_ct = 0;
 				}
-				var frame = this.frame[this._frame_ct];
-				return frame.data_url;
+				var frame = this.frames[this._frame_ct];
+				return frame.image;
 			}
 			return _AnimationFactory;
 		}

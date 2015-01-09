@@ -182,10 +182,22 @@ angular.module('sprite_util')
 			$scope.addFrame = function(){
 				var new_canvas = angular.element('<canvas width="' + $scope.selector_width + '" height="' + $scope.selector_height + '"></canvas>');
 				var new_context = new_canvas[0].getContext('2d');
+
+
+				$scope.spriteContext.clearRect(
+					$scope.selector_x,
+					$scope.selector_y,
+					$scope.selector_width,
+					$scope.selector_height
+				);
 				new_context.drawImage(
 					$scope.image,
 					$scope.selector_x,
 					$scope.selector_y,
+					$scope.selector_width,
+					$scope.selector_height,
+					0,
+					0,
 					$scope.selector_width,
 					$scope.selector_height
 				)

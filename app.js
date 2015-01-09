@@ -9,12 +9,12 @@ require('./lib')(app);
 app.use(express.static(__dirname + '/public'));
 
 
-var game = new app.Game({});
-io.on('connection', function(socket){ game.connect_user(socket) });
+app.game = new app.Game({});
+io.on('connection', function(socket){ app.game.connect_user(socket) });
 
 
 
 http.listen(3000, function(){
 	console.log('listening on *:3000');
-	game.init();
+	app.game.init();
 });
