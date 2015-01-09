@@ -80,14 +80,15 @@ angular.module('chaos_engine')
 							GameScreen.set_viewport_focus($cookies.view_port_focus);
 
 							WorldCache.init(data);
-							GameScreen.render_world();
+							GameScreen.startRendering();
+							//GameScreen.render_world();
 
 						});
 						socket.on('update-world', function (data) {
 
-							//console.log("Updateing WOrld:", data);
+
 							WorldCache.update(data);
-							GameScreen.render_world();
+							//GameScreen.render_world();
 
 						});
 						/** Setup for user generated events */
@@ -206,11 +207,12 @@ angular.module('chaos_engine')
 	.service(
 		'GameScreen',
 		[
+			'$timeout',
 			'ObjectCache',
 			'WorldCache',
 			'TileCache',
 
-			function (ObjectCache, WorldCache, TileCache) {
+			function ($timeout, ObjectCache, WorldCache, TileCache) {
 				var _GameScreen = function (options) {
 					this.view_radius = 40;
 					this.view_port = {
@@ -235,6 +237,18 @@ angular.module('chaos_engine')
 					window.addEventListener('orientationchange', function () {
 						_this.resize()
 					}, false);
+				}
+				_GameScreen.prototype.startRendering = function(){
+					if(this.timeout){
+						return; //We are already rendering
+					}
+					this.setTimeout();
+				}
+				_GameScreen.prototype.setTimeout = function(){
+					var _this = this;
+					this.timeout = $timeout(function(){
+						_this.render_world();
+					}, 200);
 				}
 				_GameScreen.prototype.set_viewport_focus = function (object_id) {
 					if (object_id.id) {
@@ -311,9 +325,9 @@ angular.module('chaos_engine')
 									_this.gameContext.drawImage(
 										image,
 										(draw_x * _this.tile_width) - (_this.tile_width * draw_y/2),
-										(draw_y * _this.tile_height) - (_this.tile_height * draw_y/2),
+										(draw_y * _this.tile_height) - (_this.tile_height * draw_y/2)/*,
 										_this.tile_width/2,
-										_this.tile_width/2
+										_this.tile_width/2*/
 									);
 								}
 
@@ -323,6 +337,7 @@ angular.module('chaos_engine')
 					if (this.modal) {
 						this.modal.render();
 					}
+					this.setTimeout();
 				}
 				_GameScreen.prototype.render = function () {
 
