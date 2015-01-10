@@ -310,19 +310,18 @@ angular.module('chaos_engine')
 
 									var tile = world.tiles[x][y];
 
-									//ObjectCache.loadImage(tile.type, tile.state, function (err, image) {
-										var draw_x = (x - _this.view_port.x) + _this.view_radius / 2 + focus_object.x_offset;
-										var draw_y = (y - _this.view_port.y) + _this.view_radius / 2 + focus_object.y_offset;
-										//console.log("x_offset:",focus_object.id, focus_object.x_offset);
+									var draw_x = (x - _this.view_port.x) + _this.view_radius / 2 + focus_object.x_offset;
+									var draw_y = (y - _this.view_port.y) + _this.view_radius / 2 + focus_object.y_offset;
+									//console.log("x_offset:",focus_object.id, focus_object.x_offset);
 
-										_this.gameContext.drawImage(
-											tile.image,
-											(draw_x * _this.tile_width) - (_this.tile_width * draw_y/2),
-											(draw_y * _this.tile_height) - (_this.tile_height * draw_y/2),
-											_this.tile_width,
-											_this.tile_height
-										);
-									//});
+									_this.gameContext.drawImage(
+										tile.image,
+										(draw_x * _this.tile_width) - (_this.tile_width * draw_y/2),
+										(draw_y * _this.tile_height) - (_this.tile_height * draw_y/2),
+										_this.tile_width,
+										_this.tile_height
+									);
+
 								}
 							}
 						}
@@ -344,7 +343,7 @@ angular.module('chaos_engine')
 									_this.gameContext.drawImage(
 										image,
 										(draw_x * _this.tile_width) - (_this.tile_width * draw_y/2),
-										(draw_y * _this.tile_height) - (_this.tile_height * draw_y/2) - image.height /*,
+										(draw_y * _this.tile_height) - (_this.tile_height * draw_y /2) - image.height /*,
 										_this.tile_width/2,
 										_this.tile_width/2*/
 									);
