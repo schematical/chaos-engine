@@ -225,7 +225,7 @@ angular.module('chaos_engine')
 						throw new Error("Game Area Element not found");
 					}
 					this.gameCanvas = document.getElementById('gameCanvas');
-					this.widthToHeight = 4 / 3;
+					this.widthToHeight = 2 / 1;
 					this.tile_width = 75;
 					this.tile_height = 38;
 
@@ -344,7 +344,7 @@ angular.module('chaos_engine')
 									_this.gameContext.drawImage(
 										image,
 										(draw_x * _this.tile_width) - (_this.tile_width * draw_y/2),
-										(draw_y * _this.tile_height) - (_this.tile_height * draw_y/2)/*,
+										(draw_y * _this.tile_height) - (_this.tile_height * draw_y/2) - image.height /*,
 										_this.tile_width/2,
 										_this.tile_width/2*/
 									);
@@ -394,7 +394,7 @@ angular.module('chaos_engine')
 
 					this.gameCanvas.width = newWidth;
 					this.gameCanvas.height = newHeight;
-					this.view_radius = Math.ceil((newHeight / this.tile_height));
+					this.view_radius = Math.ceil((newHeight / this.tile_height)) + 5;
 					/*this.view_radius = newHeight/this.tile_width;*/
 				}
 				var gameScreen = new _GameScreen();
