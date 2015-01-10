@@ -181,6 +181,9 @@ angular.module('chaos_engine')
 				},
 				get y(){
 					return this.object.y;
+				},
+				get detached(){
+					return this.object.detached;
 				}
 			}
 			//TODO: Probably define getters for (type, x,y,z,state, etc)
