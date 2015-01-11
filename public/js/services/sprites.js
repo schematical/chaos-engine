@@ -176,6 +176,21 @@ angular.module('chaos_engine')
 				get id(){
 					return this.object.id;
 				},
+				get name(){
+					return this.object.name;
+				},
+				get race(){
+					return this.object.race;
+				},
+				get type(){
+					return this.object.type;
+				},
+				get gender(){
+					return this.object.gender;
+				},
+				get state(){
+					return this.local_state;
+				},
 				get x(){
 					return this.object.x;
 				},

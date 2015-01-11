@@ -338,14 +338,23 @@ angular.module('chaos_engine')
 
 									var draw_x = (object.x - _this.view_port.x) + _this.view_radius / 2 - (object.x_offset - focus_object.x_offset);
 									var draw_y = (object.y - _this.view_port.y) + _this.view_radius / 2 - (object.y_offset  - focus_object.y_offset);
-
-
+									var draw_pixel_x = (draw_x * _this.tile_width) - (_this.tile_width * draw_y/2);
+									var draw_pixel_y = (draw_y * _this.tile_height) - (_this.tile_height * draw_y /2)- image.height;
 									_this.gameContext.drawImage(
 										image,
-										(draw_x * _this.tile_width) - (_this.tile_width * draw_y/2),
-										(draw_y * _this.tile_height) - (_this.tile_height * draw_y /2) - image.height /*,
+										draw_pixel_x,
+										draw_pixel_y /*,
 										_this.tile_width/2,
 										_this.tile_width/2*/
+									);
+
+									//Figure out canvas mode
+									//if mouse over display detail
+									_this.gameContext.font = "12px Arial";
+									_this.gameContext.fillText(
+										object.name + '(' + object.gender + ')',
+										draw_pixel_x,
+										draw_pixel_y - 20
 									);
 								}
 
