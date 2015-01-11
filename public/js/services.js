@@ -225,11 +225,13 @@ angular.module('chaos_engine')
 						throw new Error("Game Area Element not found");
 					}
 					this.gameCanvas = document.getElementById('gameCanvas');
+
 					this.widthToHeight = 2 / 1;
 					this.tile_width = 75;
 					this.tile_height = 38;
 
 					this.gameContext = this.gameCanvas.getContext("2d");
+					this.gameContext.font = "12px Arial";
 					var _this = this;
 					window.addEventListener('resize', function () {
 						_this.resize()
@@ -350,12 +352,14 @@ angular.module('chaos_engine')
 
 									//Figure out canvas mode
 									//if mouse over display detail
-									_this.gameContext.font = "12px Arial";
-									_this.gameContext.fillText(
-										object.name + '(' + object.gender + ')',
-										draw_pixel_x,
-										draw_pixel_y - 20
-									);
+									if(object.name){
+
+										_this.gameContext.fillText(
+											object.name + '(' + object.gender + '/' + Math.floor(object.age/1)  + ')',
+											draw_pixel_x,
+											draw_pixel_y - 20
+										);
+									}
 								}
 
 							}

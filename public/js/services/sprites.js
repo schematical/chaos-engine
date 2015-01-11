@@ -191,6 +191,9 @@ angular.module('chaos_engine')
 				get state(){
 					return this.local_state;
 				},
+				get age(){
+					return this.object.age;
+				},
 				get x(){
 					return this.object.x;
 				},
