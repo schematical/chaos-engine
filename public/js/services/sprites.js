@@ -194,6 +194,9 @@ angular.module('chaos_engine')
 				get age(){
 					return this.object.age;
 				},
+				get nourishment(){
+					return this.object.nourishment;
+				},
 				get x(){
 					return this.object.x;
 				},

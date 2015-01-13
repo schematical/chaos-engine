@@ -196,6 +196,15 @@ angular.module('chaos_engine')
 						for (var object_id in data.objects) {
 							if(_WorldCache.world.objects[object_id]){
 								_WorldCache.world.objects[object_id].update(data.objects[object_id]);
+							}else{
+
+								var instance = ObjectCache.createNewObjectInstance(data.objects[object_id]);
+								if(!instance){
+									//console.log("No object class for:" + object_id);
+								}else{
+									console.log("Adding Object:" + object_id);
+									_WorldCache.world.objects[object_id] = instance;
+								}
 							}
 						}
 					}
@@ -355,7 +364,7 @@ angular.module('chaos_engine')
 									if(object.name){
 
 										_this.gameContext.fillText(
-											object.name + '(' + object.gender + '/' + Math.floor(object.age/1)  + ')',
+											object.name + '(' + object.gender + '/' + Math.floor(object.age/1)  + '/' + object.nourishment + ')',
 											draw_pixel_x,
 											draw_pixel_y - 20
 										);
