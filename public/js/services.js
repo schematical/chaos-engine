@@ -58,7 +58,7 @@ angular.module('chaos_engine')
 			'InventoryModal',
 			function ($rootScope, $cookies, GameScreen, WorldCache, InventoryModal) {
 				return {
-					init: function () {
+					init: function (config) {
 
 						var socket = window.io();
 						socket.on('hello', function (data) {
@@ -81,14 +81,13 @@ angular.module('chaos_engine')
 
 							WorldCache.init(data);
 							GameScreen.startRendering();
-							//GameScreen.render_world();
 
 						});
 						socket.on('update-world', function (data) {
 
 
 							WorldCache.update(data);
-							//GameScreen.render_world();
+
 
 						});
 						/** Setup for user generated events */
@@ -167,6 +166,18 @@ angular.module('chaos_engine')
 			function (ObjectCache, TileCache) {
 				var _WorldCache = {
 					world: null,
+					_listeners:{},
+					on:function(event, callback){
+						if(!_WorldCache._listeners[event]){
+							_WorldCache._listeners[event] = [];
+						}
+						_WorldCache._listeners[event].push(callback);
+					},
+					trigger:function(event, data){
+						for(var i in _WorldCache._listeners[event]){
+							_WorldCache._listeners[event][i](data);
+						}
+					},
 					init: function (data) {
 						//First init the objects
 						_WorldCache.world = {
@@ -207,6 +218,7 @@ angular.module('chaos_engine')
 								}
 							}
 						}
+						_WorldCache.trigger('update', _WorldCache.world);
 					}
 				}
 				return _WorldCache;
@@ -249,7 +261,7 @@ angular.module('chaos_engine')
 						_this.resize()
 					}, false);
 					var _this = this;
-					window.addEventListener('mousedown', function(evt) {
+					window.addEventListener('mousedown', function(e) {
 						var mouseStartPos = _this.getMousePos(e);
 						//Find Tile
 

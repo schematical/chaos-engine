@@ -33,36 +33,9 @@
         </style>
         <script src="/socket.io/socket.io.js"></script>
 
-        <!-- DEBUG STUFF -->
-        <script src="/bower_components/ng-table/dist/ng-table.min.js"></script>
-        <link href="/bower_components/ng-table/dist/ng-table.min.css" rel="stylesheet">
-        <!-- END DEBUG STUFF -->
-
     </head>
     <body >
-    <shortcut></shortcut>
-        <div id="gameArea">
-            <canvas id="gameCanvas"></canvas>
-            <div id="statsPanel"></div>
-        </div>
-        <div ng-controller="DebugController">
-            <div>
-                <table ng-table="tableParams" class="table">
-                    <tr ng-repeat="instance in collection">
-                        <td>
-                            <input type="checkbox" ng-model="instance._selected" />
-                        </td>
 
-                        <td data-title="'Name'" sortable="'name'">
-                            <a ng-href="#{{ instance.uri }}" ng-click="selectInstance($event, instance);">
-                                {{instance.name}}
-                            </a>
-                        </td>
-                    </tr>
-                </table>
-                <button class="btn btn-danger" ng-click="archiveSelected($event);">Archive</button>
-            </div>
-        </div>
 
     </body>
 </html>

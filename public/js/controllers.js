@@ -377,3 +377,4 @@ angular.module('sprite_util')
 		}
 	]
 )
+
