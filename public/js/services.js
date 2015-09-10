@@ -277,28 +277,27 @@ angular.module('chaos_engine')
 					window.addEventListener('mousemove', function(e) {
 						var mouseStartPos = _this.getMousePos(e);
 
+						var pos = _this.getScreenPosFromWorldXY(0,0)
+						var xDiff =  mouseStartPos.x - pos.x;
+						var yDiff = mouseStartPos.y - pos.y;
+						var x = Math.floor((xDiff/ _this.tile_width) -.5);
 
-						var offset_x = Math.floor(mouseStartPos.x/_this.tile_width);
-						var offset_y = Math.floor(mouseStartPos.y/_this.tile_height);
+						var y = Math.floor((yDiff/ _this.tile_height) -.5);
 
 
-					/*	(draw_x * _this.tile_width/2) - (_this.tile_width * draw_y/2),
-						(draw_y * _this.tile_height/2) + (_this.tile_height * draw_x/2),*/
+						var y_offset = x ;
+						var x_offset = y;
+						var world_y = (y - y_offset );
+						var world_x = x + (x_offset);
+						//Center Should line up with view port
+						//The difference should determine the block
 
 						_this.selected_tile = {
-							x:offset_x - _this.view_port.x + (_this.view_port.y/2),
-							y:offset_y - _this.view_port.y + (_this.view_port.x/2)
+							x:world_x,
+							y:world_y
 						}
-						/*_this.selected_tile = {
-							x:1,
-							y:1
-						}*/
-						//console.log(_this.selected_tile );
-						//Find Tile
-
-						//If tile has object on it move to then interact
-
-						//If tile does not have object just interact
+						console.log(_this.selected_tile, x_offset , y_offset);
+//console.log(mouseStartPos.x, mouseStartPos.y);
 
 					});
 				}
@@ -337,6 +336,45 @@ angular.module('chaos_engine')
 
 
 				}*/
+				_GameScreen.prototype.getScreenPosFromWorldXY = function(x, y){
+					var focus_object = WorldCache.world.objects[this.view_port_focus];
+					var draw_x = (x - this.view_port.x) + this.view_radius / 2 + focus_object.x_offset;
+					var draw_y = (y - this.view_port.y) + focus_object.y_offset;
+					var screen_x = (draw_x * this.tile_width/2) - (this.tile_width * draw_y/2);
+					var screen_y = (draw_y * this.tile_height/2) + (this.tile_height * draw_x/2);
+					return {
+						x:screen_x,
+						y:screen_y
+					}
+				}
+				_GameScreen.prototype.getWorldPosFromScreenXY = function(screen_x, screen_y){
+					var focus_object = WorldCache.world.objects[this.view_port_focus];
+
+					var screen_x = (draw_x * this.tile_width/2) - (this.tile_width * draw_y/2);
+					var screen_y = (draw_y * this.tile_height/2) + (this.tile_height * draw_x/2);
+
+					var draw_x = (x - this.view_port.x) + this.view_radius / 2 + focus_object.x_offset;
+					var draw_y = (y - this.view_port.y) + focus_object.y_offset;
+
+
+				}
+				_GameScreen.prototype.drawDebug = function(){
+
+					this.gameContext.strokeStyle="#00FF00";
+
+					var pos = this.getScreenPosFromWorldXY(0,0)
+
+					this.gameContext.beginPath();
+					this.gameContext.moveTo(pos.x, 0);
+					this.gameContext.lineTo(pos.x, this.gameCanvas.height);
+					this.gameContext.stroke();
+
+					this.gameContext.beginPath();
+					this.gameContext.moveTo(0, pos.y);
+					this.gameContext.lineTo(this.gameCanvas.width, pos.y);
+					this.gameContext.stroke();
+
+				}
 				_GameScreen.prototype.render_world = function () {
 					//Clear canvas
 					this.gameContext.clearRect(
@@ -369,7 +407,7 @@ angular.module('chaos_engine')
 									var tile = world.tiles[x][y];
 
 									var draw_x = (x - _this.view_port.x) + _this.view_radius / 2 + focus_object.x_offset;
-									var draw_y = (y - _this.view_port.y)/* + _this.view_radius / 2 */+ focus_object.y_offset;
+									var draw_y = (y - _this.view_port.y) + focus_object.y_offset;
 
 
 
@@ -403,10 +441,8 @@ angular.module('chaos_engine')
 								if(image){
 
 									var draw_x = (object.x - _this.view_port.x) + _this.view_radius / 2 - (object.x_offset - focus_object.x_offset);
-									var draw_y = (object.y - _this.view_port.y)/* + _this.view_radius / 2*/ - (object.y_offset  - focus_object.y_offset);
-								/*	var draw_pixel_x = (draw_x * _this.tile_width) - (_this.tile_width * draw_y/2);
-									var draw_pixel_y = (draw_y * _this.tile_height) - (_this.tile_height * draw_y /2)- image.height;
-*/
+									var draw_y = (object.y - _this.view_port.y) - (object.y_offset  - focus_object.y_offset);
+
 
 									var draw_pixel_x = (draw_x * _this.tile_width/2) - (_this.tile_width * draw_y/2);
 									var draw_pixel_y = (draw_y * _this.tile_height/2) + (_this.tile_height * draw_x/2)- image.height;
@@ -433,6 +469,10 @@ angular.module('chaos_engine')
 							}
 						}
 					}
+
+					this.drawDebug();
+
+
 					if (this.modal) {
 						this.modal.render();
 					}
