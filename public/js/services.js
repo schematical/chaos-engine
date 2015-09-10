@@ -280,13 +280,13 @@ angular.module('chaos_engine')
 						var pos = _this.getScreenPosFromWorldXY(0,0)
 						var xDiff =  mouseStartPos.x - pos.x;
 						var yDiff = mouseStartPos.y - pos.y;
-						var x = Math.floor((xDiff/ _this.tile_width) -.5);
+						var x = Math.round((xDiff/ _this.tile_width) -.5);
 
-						var y = Math.floor((yDiff/ _this.tile_height) -.5);
+						var y = Math.round((yDiff/ _this.tile_height) -.5);
 
 
-						var y_offset = x ;
-						var x_offset = y;
+						var y_offset = Math.floor((xDiff/ _this.tile_width) -.5) ;
+						var x_offset = Math.floor((yDiff/ _this.tile_height) -.5);
 						var world_y = (y - y_offset );
 						var world_x = x + (x_offset);
 						//Center Should line up with view port
@@ -296,7 +296,7 @@ angular.module('chaos_engine')
 							x:world_x,
 							y:world_y
 						}
-						console.log(_this.selected_tile, x_offset , y_offset);
+						console.log(_this.selected_tile, xDiff , yDiff);
 //console.log(mouseStartPos.x, mouseStartPos.y);
 
 					});
