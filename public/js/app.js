@@ -44,7 +44,7 @@ angular.module('chaos_engine')
 		'WorldCache',
 		function($document,$scope, $cookies,ngTableParams, WorldCache){
 			WorldCache.on('update', function(world){
-				console.log("Update:", world);
+
 				var collection = [];
 				for(var i in world.objects){
 					collection.push(world.objects[i]);
