@@ -250,6 +250,10 @@ angular.module('chaos_engine')
 					this.widthToHeight = 2 / 1;
 					this.tile_width = 75;
 					this.tile_height = 38;
+					this.selected_tile = {
+						x:-1,
+						y:-1
+					};
 
 					this.gameContext = this.gameCanvas.getContext("2d");
 					this.gameContext.font = "12px Arial";
@@ -263,6 +267,29 @@ angular.module('chaos_engine')
 					var _this = this;
 					window.addEventListener('mousedown', function(e) {
 						var mouseStartPos = _this.getMousePos(e);
+						//Find Tile
+
+						//If tile has object on it move to then interact
+
+						//If tile does not have object just interact
+
+					});
+					window.addEventListener('mousemove', function(e) {
+						var mouseStartPos = _this.getMousePos(e);
+
+
+						var offset_x = Math.floor(mouseStartPos.x/_this.tile_width);
+						var offset_y = Math.floor(mouseStartPos.y/_this.tile_height);
+
+						_this.selected_tile = {
+							x:offset_x - _this.view_port.x + (_this.view_port.y/2),
+							y:offset_y - _this.view_port.y + (_this.view_port.x/2)
+						}
+						_this.selected_tile = {
+							x:2,
+							y:2
+						}
+						console.log(_this.selected_tile );
 						//Find Tile
 
 						//If tile has object on it move to then interact
@@ -302,6 +329,10 @@ angular.module('chaos_engine')
 					this.view_port.y = y;
 					this.view_port.z = z;
 				}
+			/*	_GameScreen.prototype.findScreenPos = function(){
+
+
+				}*/
 				_GameScreen.prototype.render_world = function () {
 					//Clear canvas
 					this.gameContext.clearRect(
@@ -335,16 +366,30 @@ angular.module('chaos_engine')
 
 									var draw_x = (x - _this.view_port.x) + _this.view_radius / 2 + focus_object.x_offset;
 									var draw_y = (y - _this.view_port.y) + _this.view_radius / 2 + focus_object.y_offset;
-									//console.log("x_offset:",focus_object.id, focus_object.x_offset);
 
-									_this.gameContext.drawImage(
+
+									/*_this.gameContext.drawImage(
 										tile.image,
 										(draw_x * _this.tile_width) - (_this.tile_width * draw_y/2),
 										(draw_y * _this.tile_height) - (_this.tile_height * draw_y/2),
 										_this.tile_width,
 										_this.tile_height
-									);
+									);*/
+									if(
+										!(
+											(this.selected_tile.x == x) &&
+											(this.selected_tile.y == y)
+										)
+									){
 
+										_this.gameContext.drawImage(
+											tile.image,
+											(draw_x * _this.tile_width) - (_this.tile_width * draw_y/2),
+											(draw_y * _this.tile_height) - (_this.tile_height * draw_y/2),
+											_this.tile_width,
+											_this.tile_height
+										);
+									}
 								}
 							}
 						}
@@ -376,7 +421,7 @@ angular.module('chaos_engine')
 									if(object.name){
 
 										_this.gameContext.fillText(
-											object.name + '(' + object.gender + '/' + Math.floor(object.age/1)  + '/' + object.nourishment + ')',
+											object.name,
 											draw_pixel_x,
 											draw_pixel_y - 20
 										);
