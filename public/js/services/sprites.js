@@ -179,6 +179,9 @@ angular.module('chaos_engine')
 				get name(){
 					return this.object.name;
 				},
+				get health(){
+					return this.object.health;
+				},
 				get race(){
 					return this.object.race;
 				},

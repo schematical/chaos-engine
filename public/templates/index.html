@@ -151,6 +151,10 @@
                 top: 1%;
                 left:1%;
             }
+            #targetHud_brain  table, #targetHud_brain th, #targetHud_brain td {
+                border: 1px solid green;
+                background-color: black;;
+            }
 
        </style>
         <script src="/socket.io/socket.io.js"></script>
@@ -237,6 +241,9 @@
                                 </td>
                                 <td data-title="'Nourishment'" sortable="'nourishment'">
                                     {{instance.nourishment}}
+                                </td>
+                                <td data-title="'Health'" sortable="'health'">
+                                    {{instance.health}}
                                 </td>
 
                             </tr>

@@ -12,7 +12,9 @@ angular.module('chaos_engine')
 			$scope.show = function(panel){
 				//Hide other panels
 				$scope.reset();
-
+				$scope.$broadcast('panel_change', {
+					panel:panel
+				})
 				switch(panel){
 					case('debug'):
 						$scope.displayDebugHud = true;
@@ -45,7 +47,8 @@ angular.module('chaos_engine')
 		'$cookies',
 		'ngTableParams',
 		'WorldCache',
-		function($document,$scope, $cookies,ngTableParams, WorldCache){
+		'GameScreen',
+		function($document,$scope, $cookies,ngTableParams, WorldCache, GameScreen){
 			WorldCache.on('update', function(world){
 
 				var collection = [];
@@ -54,8 +57,9 @@ angular.module('chaos_engine')
 				}
 				$scope.collection = collection;
 				$scope.displayDebugTargetList = true;
-				$scope.selectInstance = function(){
-					$scope.displayDebugTargetList = false;
+				$scope.selectInstance = function($event, instance){
+					GameScreen.setSelectedObject(instance);
+					$scope.$parent.show('target');
 				}
 				/*	$scope.tableParams = new ngTableParams(
 				 {
@@ -96,6 +100,9 @@ angular.module('chaos_engine')
 		function($document,$scope, $cookies, WorldCache, GameScreen){
 			$scope.displayTargetDetail = true;
 			$scope.displayBrainDetail = true;
+			$scope.$on('panel_change', function(data){
+				$scope.showTarget('detail');
+			});
 			WorldCache.on('update', function(world){
 				if(GameScreen.selected_object) {
 					$scope.target = GameScreen.selected_object
@@ -125,6 +132,15 @@ angular.module('chaos_engine')
 								switch(node_chain.type){
 									case('StatChange'):
 										node.target = node_chain.watch + node_chain.compairison + node_chain.tipping_point;
+									break;
+									case('Evade'):
+										node.target = node_chain.distance;
+									break;
+									case('Interact'):
+										node.target = node_chain.interaction_type;
+									break;
+									case('Explore'):
+										node.target = 'direction_duration_max: ' +node_chain.direction_duration_max;
 									break;
 									default:
 										node.target = JSON.stringify(node_chain.target)

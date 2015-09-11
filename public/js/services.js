@@ -279,7 +279,7 @@ angular.module('chaos_engine')
 									(object.y == _this.selected_tile.y) &&
 									(!object.detached)
 								) {
-									_this.selected_object = object;
+									_this.setSelectedObject(object);
 									_this.hudCtl.show('target');
 								}
 							}
@@ -324,6 +324,9 @@ angular.module('chaos_engine')
 					this.view_port.x = x;
 					this.view_port.y = y;
 					this.view_port.z = z;
+				}
+				_GameScreen.prototype.setSelectedObject = function(object){
+					this.selected_object = object;
 				}
 
 				_GameScreen.prototype.getScreenPosFromWorldXY = function(x, y){
