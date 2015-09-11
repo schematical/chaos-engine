@@ -213,7 +213,7 @@ angular.module('chaos_engine')
 								if(!instance){
 									//console.log("No object class for:" + object_id);
 								}else{
-									console.log("Adding Object:" + object_id);
+
 									_WorldCache.world.objects[object_id] = instance;
 								}
 							}
@@ -270,16 +270,25 @@ angular.module('chaos_engine')
 						//Find Tile
 
 						//If tile has object on it move to then interact
+						for (var i in WorldCache.world.objects) {
+							if (WorldCache.world.objects[i]) {
 
-						//If tile does not have object just interact
+								var object = WorldCache.world.objects[i];
+								if (
+									(object.x == _this.selected_tile.x) &&
+									(object.y == _this.selected_tile.y) &&
+									(!object.detached)
+								) {
+									_this.selected_object = object;
+									_this.hudCtl.show('target');
+								}
+							}
+						}
+
 
 					});
 					window.addEventListener('mousemove', function(e) {
 						var mouseStartPos = _this.getMousePos(e);
-
-
-						//Center Should line up with view port
-						//The difference should determine the block
 
 						_this.selected_tile = _this.getWorldPosFromScreenXY(mouseStartPos.x, mouseStartPos.y);
 
@@ -316,10 +325,7 @@ angular.module('chaos_engine')
 					this.view_port.y = y;
 					this.view_port.z = z;
 				}
-			/*	_GameScreen.prototype.findScreenPos = function(){
 
-
-				}*/
 				_GameScreen.prototype.getScreenPosFromWorldXY = function(x, y){
 					var focus_object = WorldCache.world.objects[this.view_port_focus];
 					var draw_x = (x - this.view_port.x) + this.view_radius / 2 + focus_object.x_offset;
@@ -344,7 +350,7 @@ angular.module('chaos_engine')
 					var y_offset = Math.floor((xDiff/ this.tile_width) -.5) ;
 					var x_offset = Math.floor((yDiff/ this.tile_height) -.5);
 					var world_y = (y - y_offset );
-					var world_x = x + (x_offset);
+					var world_x = (x + x_offset);
 					return {
 						x:world_x,
 						y:world_y
@@ -466,14 +472,10 @@ angular.module('chaos_engine')
 					this.drawDebug();
 
 
-					if (this.modal) {
-						this.modal.render();
-					}
+
 					this.setTimeout();
 				}
-				_GameScreen.prototype.render = function () {
 
-				}
 				_GameScreen.prototype.showModal = function (modal) {
 
 					this.modal = modal;
@@ -509,6 +511,9 @@ angular.module('chaos_engine')
 					this.gameCanvas.height = newHeight;
 					this.view_radius = Math.ceil((newHeight / this.tile_height)) + 5;
 					/*this.view_radius = newHeight/this.tile_width;*/
+				}
+				_GameScreen.prototype.setHudCtl = function($scope){
+					this.hudCtl = $scope;
 				}
 				var gameScreen = new _GameScreen();
 				gameScreen.resize();

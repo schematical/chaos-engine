@@ -4,6 +4,7 @@
         <script src="/bower_components/angular-cookies/angular-cookies.js"></script>
         <script src="/js/app.js"></script>
         <script src="/js/services.js"></script>
+        <script src="/js/controllers.js"></script>
         <script src="/js/services/sprites.js"></script>
         <script src="/js/services/ObjectCache.js"></script>
         <style>
@@ -11,6 +12,8 @@
             body {
                 min-height: 100%;
                 font: 13px Helvetica, Arial;
+                color:green;
+                background: black;
             }
             html, body {
                 width:  100%;
@@ -26,7 +29,14 @@
                 width: 100%;
                 height: 100%;
             }
-            #statsPanel {
+
+
+
+            /**-----------------------------------------
+            BOTTOM HUD STUFF
+
+            */
+            #bottomHud {
                 position: absolute;
                 width: 100%;
                 height: 31%;
@@ -35,22 +45,114 @@
                 background-image: url('./imgs/hud/footer_bar.jpg');
                 background-size: cover;
             }
+            .bottomHud_inner{
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+            #btnDebug{
+                position: absolute;
+                top: 63%;
+                left: 33%;
+                height: 30%;
+                width: 5%;
+
+            }
+
+
+
+
+
+            /**-----------------------------------------
+            GENERIC HUD PANEL STUFF
+
+            */
             .hudPanel {
                 position: absolute;
-
                 height: 69%;
                 top: 0;
-
-
                 background-size: cover;
             }
-            #inventoryHud{
+            .hudPanel a{
+                color:#88ff88;
+            }
+
+            .btn:hover{
+                background: green;
+                opacity: 0.4;
+            }
+            #backgroundHud {
+                position: absolute;
+                width: 100%;
+                height: 69%;
+                top: 0;
+                opacity: 0.8;
+                background-color:green;
+                background-size: cover;
+            }
+
+
+
+
+            /**-----------------------------------------
+            INVENTORY HUD STUFF
+
+
+           */
+           #inventoryHud{
+               width: 46%;
+               left:27%;
+               background-image: url('./imgs/hud/main_hud.jpg');
+               background-size: cover;
+           }
+
+
+
+
+            /**-----------------------------------------
+            DEBUG HUD
+
+            */
+           #debugHud{
+               width: 46%;
+               left:27%;
+               background-image: url('./imgs/hud/blank_hud.jpg');
+               background-size: cover;
+               padding:70Px;
+           }
+           #debugHud_inside{
+               overflow-y: scroll;
+               height: 100%;
+
+           }
+
+
+
+
+            /**-----------------------------------------
+            TARGET HUD
+
+            */
+            #targetHud{
                 width: 46%;
                 left:27%;
-                background-image: url('./imgs/hud/main_hud.jpg');
+                background-image: url('./imgs/hud/blank_hud.jpg');
                 background-size: cover;
+                padding:70Px;
             }
-        </style>
+            #targetHud_inside{
+                position: relative;
+                height: 100%;
+                width: 100%;
+
+            }
+            #targetHud_detail{
+                position: absolute;
+                top: 1%;
+                left:1%;
+            }
+
+       </style>
         <script src="/socket.io/socket.io.js"></script>
 
         <!-- DEBUG STUFF -->
@@ -61,43 +163,95 @@
     </head>
     <body >
     <shortcut></shortcut>
-        <div id="gameArea">
+        <div id="gameArea" ng-controller="HudCtl">
             <canvas id="gameCanvas"></canvas>
-            <div id="statsPanel" ng-show="false">></div>
 
-            <div id="inventoryHud" class="hudPanel" ng-show="false"></div>
-        </div>
-        <div ng-controller="DebugController">
-            <div style="z-index: 2001;">
-                <table ng-table="tableParams" class="table">
-                    <tr ng-repeat="instance in collection">
-                        <td>
-                            <input type="checkbox" ng-model="instance._selected" />
-                        </td>
 
-                        <td data-title="'Name'" sortable="'name'">
-                            <a ng-href="#{{ instance.uri }}" ng-click="selectInstance($event, instance);">
-                                {{instance.name}}
-                            </a>
-                        </td>
-                        <td data-title="'State'" sortable="'state'">
-                            {{instance.state}}
-                        </td>
-                        <td data-title="'Gender'" sortable="'gender'">
-                            {{instance.gender}}
-                         </td>
-                        <td data-title="'Age'" sortable="'age'">
-                            {{instance.age/1}}
-                        </td>
-                        <td data-title="'Nourishment'" sortable="'nourishment'">
-                            {{instance.nourishment}}
-                        </td>
+            <!--BACKGROUND HUD -->
+            <div id="backgroundHud" ng-show="displayBackgroundHud" ng-click="reset();"></div>
 
-                    </tr>
-                </table>
-                <button class="btn btn-danger" ng-click="archiveSelected($event);">Archive</button>
+
+
+
+            <!--BOTTOM HUD -->
+            <div id="bottomHud" ng-show="displayBottomHud">
+                <div class="bottomHud_inner">
+                    <div id="btnDebug" class="btn" ng-click="show('debug');"></div>
+                </div>
             </div>
+
+
+
+            <!--INVENTORY HUD -->
+            <div id="inventoryHud" class="hudPanel" ng-show="displayInventoryHud"></div>
+
+
+            <!--TARGET HUD -->
+            <div  id="targetHud" class="hudPanel" ng-show="displayTargetHud" ng-controller="TargetController">
+                <div id="targetHud_inside">
+                    <div id="targetHud_detail" ng-show="displayTargetDetail">
+                        <span ng-bind="target.name"></span>
+                        <button ng-click="showTarget('brain')">Brain</button>
+                    </div>
+                    <div id="targetHud_brain" ng-show="displayTargetBrain">
+                        Brian<br/>
+                        <table ng-table="tableParams" class="table">
+                            <tr ng-repeat="node_chain in decision_matrix">
+                               <!-- <td>
+                                    <input type="checkbox" ng-model="instance._selected" />
+                                </td>-->
+
+                                <td ng-repeat="node in node_chain">
+                                   {{ node.type }}( {{ node.target}} )
+                                </td>
+
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!--DEBUG HUD -->
+            <div  id="debugHud" class="hudPanel" ng-show="displayDebugHud" ng-controller="DebugController">
+                <div id="debugHud_inside">
+                    <div ng-show="displayDebugTargetList">
+                        <table ng-table="tableParams" class="table">
+                            <tr ng-repeat="instance in collection">
+                                <td>
+                                    <input type="checkbox" ng-model="instance._selected" />
+                                </td>
+
+                                <td data-title="'Name'" sortable="'name'">
+                                    <a ng-href="#{{ instance.uri }}" ng-click="selectInstance($event, instance);">
+                                        {{instance.name}}
+                                    </a>
+                                </td>
+                                <td data-title="'State'" sortable="'state'">
+                                    {{instance.state}}
+                                </td>
+                                <td data-title="'Gender'" sortable="'gender'">
+                                    {{instance.gender}}
+                                </td>
+                                <td data-title="'Age'" sortable="'age'">
+                                    {{instance.age/1}}
+                                </td>
+                                <td data-title="'Nourishment'" sortable="'nourishment'">
+                                    {{instance.nourishment}}
+                                </td>
+
+                            </tr>
+                        </table>
+                        <button class="btn btn-danger" ng-click="archiveSelected($event);">Archive</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
         </div>
+
 
     </body>
 </html>
