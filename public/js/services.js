@@ -277,27 +277,11 @@ angular.module('chaos_engine')
 					window.addEventListener('mousemove', function(e) {
 						var mouseStartPos = _this.getMousePos(e);
 
-						var pos = _this.getScreenPosFromWorldXY(0,0)
-						var xDiff =  mouseStartPos.x - pos.x;
-						var yDiff = mouseStartPos.y - pos.y;
-						var x = Math.round((xDiff/ _this.tile_width) -.5);
 
-						var y = Math.round((yDiff/ _this.tile_height) -.5);
-
-
-						var y_offset = Math.floor((xDiff/ _this.tile_width) -.5) ;
-						var x_offset = Math.floor((yDiff/ _this.tile_height) -.5);
-						var world_y = (y - y_offset );
-						var world_x = x + (x_offset);
 						//Center Should line up with view port
 						//The difference should determine the block
 
-						_this.selected_tile = {
-							x:world_x,
-							y:world_y
-						}
-						console.log(_this.selected_tile, xDiff , yDiff);
-//console.log(mouseStartPos.x, mouseStartPos.y);
+						_this.selected_tile = _this.getWorldPosFromScreenXY(mouseStartPos.x, mouseStartPos.y);
 
 					});
 				}
@@ -348,14 +332,23 @@ angular.module('chaos_engine')
 					}
 				}
 				_GameScreen.prototype.getWorldPosFromScreenXY = function(screen_x, screen_y){
-					var focus_object = WorldCache.world.objects[this.view_port_focus];
 
-					var screen_x = (draw_x * this.tile_width/2) - (this.tile_width * draw_y/2);
-					var screen_y = (draw_y * this.tile_height/2) + (this.tile_height * draw_x/2);
+					var pos = this.getScreenPosFromWorldXY(0,0)
+					var xDiff = screen_x - pos.x;
+					var yDiff = screen_y - pos.y;
+					var x = Math.round((xDiff/ this.tile_width) -.5);
 
-					var draw_x = (x - this.view_port.x) + this.view_radius / 2 + focus_object.x_offset;
-					var draw_y = (y - this.view_port.y) + focus_object.y_offset;
+					var y = Math.round((yDiff/ this.tile_height) -.5);
 
+
+					var y_offset = Math.floor((xDiff/ this.tile_width) -.5) ;
+					var x_offset = Math.floor((yDiff/ this.tile_height) -.5);
+					var world_y = (y - y_offset );
+					var world_x = x + (x_offset);
+					return {
+						x:world_x,
+						y:world_y
+					}
 
 				}
 				_GameScreen.prototype.drawDebug = function(){
