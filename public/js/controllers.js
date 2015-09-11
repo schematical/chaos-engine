@@ -98,8 +98,8 @@ angular.module('chaos_engine')
 		'WorldCache',
 		'GameScreen',
 		function($document,$scope, $cookies, WorldCache, GameScreen){
-			$scope.displayTargetDetail = true;
-			$scope.displayBrainDetail = true;
+
+
 			$scope.$on('panel_change', function(data){
 				$scope.showTarget('detail');
 			});
@@ -113,6 +113,14 @@ angular.module('chaos_engine')
 				switch(screen){
 					case('detail'):
 						$scope.displayTargetDetail = true;
+					break;
+					case('inventory'):
+						$scope.displayTargetInventory = true;
+						$scope.inventory = [];
+						for(var i in $scope.target.object.inventory){
+							var object = $scope.target.object.inventory[i];
+							$scope.inventory.push(object);
+						}
 					break;
 					case('brain'):
 						$scope.displayTargetBrain = true;
@@ -170,7 +178,9 @@ angular.module('chaos_engine')
 			$scope.reset = function(){
 				$scope.displayTargetDetail = false;
 				$scope.displayTargetBrain = false;
+				$scope.displayTargetInventory = false;
 			}
+			$scope.showTarget('detail');
 		}
 	]
 );

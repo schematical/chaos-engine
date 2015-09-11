@@ -362,7 +362,7 @@ angular.module('chaos_engine')
 				}
 				_GameScreen.prototype.drawDebug = function(){
 
-					this.gameContext.strokeStyle="#00FF00";
+					/*this.gameContext.strokeStyle="#00FF00";
 
 					var pos = this.getScreenPosFromWorldXY(0,0)
 
@@ -374,7 +374,7 @@ angular.module('chaos_engine')
 					this.gameContext.beginPath();
 					this.gameContext.moveTo(0, pos.y);
 					this.gameContext.lineTo(this.gameCanvas.width, pos.y);
-					this.gameContext.stroke();
+					this.gameContext.stroke();*/
 
 				}
 				_GameScreen.prototype.render_world = function () {

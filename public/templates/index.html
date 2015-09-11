@@ -196,6 +196,7 @@
                     <div id="targetHud_detail" ng-show="displayTargetDetail">
                         <span ng-bind="target.name"></span>
                         <button ng-click="showTarget('brain')">Brain</button>
+                        <button ng-click="showTarget('inventory')">Inventory</button>
                     </div>
                     <div id="targetHud_brain" ng-show="displayTargetBrain">
                         Brian<br/>
@@ -209,6 +210,20 @@
                                    {{ node.type }}( {{ node.target}} )
                                 </td>
 
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="targetHud_inventory" ng-show="displayTargetInventory">
+                        Inventory<br/>
+                        <table ng-table="tableParams" class="table">
+                            <tr ng-repeat="object in inventory">
+
+                                <td data-title="'Id'" sortable="'id'">
+                                    {{object.id}}
+                                </td>
+                                <td data-title="'Type'" sortable="'type'">
+                                    {{object.type}}
+                                </td>
                             </tr>
                         </table>
                     </div>
