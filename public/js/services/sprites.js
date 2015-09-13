@@ -203,6 +203,12 @@ angular.module('chaos_engine')
 				get hydration(){
 					return this.object.hydration;
 				},
+				get generation(){
+					return this.object.generation;
+				},
+				get children_ct(){
+					return this.object.children_ct;
+				},
 				get is_pregnant(){
 					return this.object.is_pregnant;
 				},
