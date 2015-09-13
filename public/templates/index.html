@@ -210,6 +210,9 @@
                             <li>
                                 <a ng-click="showTarget('inventory')" href="#">Inventory</a>
                             </li>
+                            <li>
+                                <a ng-click="showTarget('history')" href="#">History</a>
+                            </li>
                         </ul>
                         <hr>
                         <h5>State: {{target.state}}</h5>
@@ -255,6 +258,20 @@
                             </tr>
                         </table>
                     </div>
+                    <div id="targetHud_history" ng-show="displayTargetHistory">
+                        History<br/>
+                        <table ng-table="tableParams" class="table">
+                            <tr ng-repeat="event in history">
+
+                                <td data-title="'Date'" sortable="'date'">
+                                    {{event.date}}
+                                </td>
+                                <td data-title="'Desc'" sortable="'desc'">
+                                    {{event.desc}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -268,9 +285,9 @@
                                     <input type="checkbox" ng-model="instance._selected" />
                                 </td>
 
-                                <td data-title="'Name'" sortable="'name'">
+                                <td data-title="'Name'" sortable="'id'">
                                     <a ng-href="#{{ instance.uri }}" ng-click="selectInstance($event, instance);">
-                                        {{instance.name}}
+                                        {{instance.id}}
                                     </a>
                                 </td>
                                 <td data-title="'State'" sortable="'state'">

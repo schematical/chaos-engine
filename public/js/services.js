@@ -55,8 +55,7 @@ angular.module('chaos_engine')
 			'$cookies',
 			'GameScreen',
 			'WorldCache',
-			'InventoryModal',
-			function ($rootScope, $cookies, GameScreen, WorldCache, InventoryModal) {
+			function ($rootScope, $cookies, GameScreen, WorldCache) {
 				return {
 					init: function (config) {
 
@@ -131,7 +130,7 @@ angular.module('chaos_engine')
 									})
 									break;
 								case('i'):
-									//Display the inventory Modal
+									/*//Display the inventory Modal
 									GameScreen.showModal(new InventoryModal({
 										ingest: function (inventory_object) {
 											socket.emit('user-input', {
@@ -140,7 +139,7 @@ angular.module('chaos_engine')
 											})
 										}
 									}));
-
+*/
 									break;
 							}
 
@@ -525,95 +524,7 @@ angular.module('chaos_engine')
 			}
 		]
 	)
-	.service('InventoryModal', ['ObjectCache', function (ObjectCache) {
-		var _InventoryModal = function (data) {
-			this.ingest = data.ingest;
-			this.selected = null;
-		}
-		_InventoryModal.prototype.render = function () {
-			var screen = this.screen;
-			screen.gameContext.fillStyle = "#000000";
-			var modal_width = this.screen.gameCanvas.width / 2;
-			var modal_height = this.screen.gameCanvas.height / 2;
-			screen.gameContext.fillRect(
-				screen.gameCanvas.width / 4,
-				screen.gameCanvas.height / 4,
-				modal_width,
-				modal_height
-			);
-			var object = this.world.objects[screen.view_port_focus];
-			ObjectCache.loadImage(object.type, object.state, function (err, image) {
 
-				screen.gameContext.drawImage(
-					image,
-					modal_width / 2 + (modal_width * .1),
-					modal_height / 2 + (modal_height * .1),
-					screen.tile_width,
-					screen.tile_width
-				);
-			});
-			var ct = 0;
-			for (var i in object.inventory) {
-				var screen_x = modal_width / 2 + (modal_width * .9) - screen.tile_width;
-				var screen_y = modal_height / 2 + (modal_height * .1) + (screen.tile_width * 1.5 * ct);
-				if (ct == this.selected) {
-					screen.gameContext.fillStyle = "#ff0000";
-					screen.gameContext.fillRect(
-						screen_x - 5,
-						screen_y - 5,
-						screen.tile_width + 10,
-						screen.tile_width + 10
-					);
-				}
-				ObjectCache.loadImage(object.inventory[i].type, object.inventory[i].state, function (err, image) {
-
-					screen.gameContext.drawImage(
-						image,
-						screen_x,
-						screen_y,
-						screen.tile_width,
-						screen.tile_width
-					);
-				});
-				ct += 1;
-			}
-
-		}
-		_InventoryModal.prototype.apply = function (key) {
-
-			var object = this.world.objects[this.screen.view_port_focus];
-			switch (key) {
-				case('w'):
-					if (!this.selected) {
-						this.selected = 0;
-					} else {
-						this.selected += 1;
-					}
-					if (this.selected > object.inventory.length) {
-						this.selected = 0;
-					}
-					break;
-				case('d'):
-					if (!this.selected) {
-						this.selected = 0;
-					} else {
-						this.selected -= 1;
-					}
-					if (this.selected < 0) {
-						this.selected = object.inventory.length;
-					}
-					break;
-				case('enter'):
-					var inventory_object = object.inventory[this.selected];
-					this.ingest(inventory_object);
-					break;
-				case('i'):
-					this.screen.hideModal();
-					break;
-			}
-		}
-		return _InventoryModal;
-	}])
 	.directive('shortcut', ['$document', '$rootScope', function ($document, $rootScope) {
 		return {
 			restrict: 'E',
