@@ -200,6 +200,15 @@ angular.module('chaos_engine')
 				get nourishment(){
 					return this.object.nourishment;
 				},
+				get hydration(){
+					return this.object.hydration;
+				},
+				get is_pregnant(){
+					return this.object.is_pregnant;
+				},
+				get gestation_ct(){
+					return this.object.gestation_ct;
+				},
 				get x(){
 					return this.object.x;
 				},
