@@ -125,53 +125,53 @@ angular.module('chaos_engine')
 					case('brain'):
 						$scope.displayTargetBrain = true;
 						//We also have to prepair the logic matrix
+						WorldCache.on('update', function(world) {
+							$scope.decision_matrix = [];
+							for (var i in $scope.target.object.brain.decision_matrix) {
+								var clean_node_chain = [];
+								var node_chain = $scope.target.object.brain.decision_matrix[i];
+								var finished = false;
+								var safe = 0;
+								while (!finished && (safe < 5)) {
+									var node = {
+										type: node_chain.type,
+										exicuting: node_chain.exicuting
+									};
 
-						$scope.decision_matrix = [];
-						for(var i in $scope.target.object.brain.decision_matrix){
-							var clean_node_chain = [];
-							var node_chain = $scope.target.object.brain.decision_matrix[i];
-							var finished = false;
-							var safe = 0;
-							while(!finished && (safe < 5)) {
-								var node = {
-									type: node_chain.type
-								};
+									switch (node_chain.type) {
+										case('StatChange'):
+											node.target = node_chain.watch + node_chain.compairison + node_chain.tipping_point;
+											break;
+										case('Evade'):
+											node.target = node_chain.distance;
+											break;
+										case('Interact'):
+											node.target = node_chain.interaction_type;
+											break;
+										case('Explore'):
+											node.target = 'direction_duration_max: ' + node_chain.direction_duration_max;
+											break;
+										default:
+											node.target = JSON.stringify(node_chain.target)
+											break;
+									}
 
-								switch(node_chain.type){
-									case('StatChange'):
-										node.target = node_chain.watch + node_chain.compairison + node_chain.tipping_point;
-									break;
-									case('Evade'):
-										node.target = node_chain.distance;
-									break;
-									case('Interact'):
-										node.target = node_chain.interaction_type;
-									break;
-									case('Explore'):
-										node.target = 'direction_duration_max: ' +node_chain.direction_duration_max;
-									break;
-									default:
-										node.target = JSON.stringify(node_chain.target)
-									break;
+
+									clean_node_chain.push(node);
+									if (node_chain._outputNode) {
+										node_chain = node_chain._outputNode;
+
+									} else if (node_chain._chainedInputNode) {
+										node_chain = node_chain._chainedInputNode;
+									} else {
+										finished = true;
+									}
+									safe += 1;
 								}
 
-
-
-
-								clean_node_chain.push(node);
-								if(node_chain._outputNode){
-									node_chain = node_chain._outputNode;
-
-								}else if(node_chain._chainedInputNode){
-									node_chain = node_chain._chainedInputNode;
-								}else{
-									finished = true;
-								}
-								safe += 1;
+								$scope.decision_matrix.push(clean_node_chain);
 							}
-
-							$scope.decision_matrix.push(clean_node_chain);
-						}
+						});
 					break;
 				}
 			}

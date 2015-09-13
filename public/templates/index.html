@@ -7,13 +7,16 @@
         <script src="/js/controllers.js"></script>
         <script src="/js/services/sprites.js"></script>
         <script src="/js/services/ObjectCache.js"></script>
+        <link href='https://fonts.googleapis.com/css?family=Pathway+Gothic+One' rel='stylesheet' type='text/css'>
         <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
+
             body {
                 min-height: 100%;
                 font: 13px Helvetica, Arial;
                 color:green;
                 background: black;
+                font-family: 'Pathway Gothic One', sans-serif;
             }
             html, body {
                 width:  100%;
@@ -155,6 +158,10 @@
                 border: 1px solid green;
                 background-color: black;;
             }
+            #targetHud_brain .exicuting{
+                background-color: green;
+                color:black;
+            }
 
        </style>
         <script src="/socket.io/socket.io.js"></script>
@@ -195,18 +202,39 @@
                 <div id="targetHud_inside">
                     <div id="targetHud_detail" ng-show="displayTargetDetail">
                         <span ng-bind="target.name"></span>
-                        <button ng-click="showTarget('brain')">Brain</button>
-                        <button ng-click="showTarget('inventory')">Inventory</button>
+                        <hr>
+                        <ul style="list-style: none;">
+                            <li>
+                                <a ng-click="showTarget('brain')" href="#">Brain</a>
+                            </li>
+                            <li>
+                                <a ng-click="showTarget('inventory')" href="#">Inventory</a>
+                            </li>
+                        </ul>
+                        <hr>
+                        <h5>State: {{target.state}}</h5>
+
+                        <h5>Gender: {{target.gender}}</h5>
+
+
+                        <h5>Age: {{target.age/1}}</h5>
+                        <h5>Nourishment: {{target.nourishment}}</h5>
+                        <h5>Health: {{target.health}}</h5>
+                        <h5>Hydration: {{target.Hydration}}</h5>
+                        <div ng-show="target.is_pregant">
+                            <h5>Gestation: {{target.gestaton_ct}}</h5>
+                            <h5>Father: {{target.litter_father.id}}</h5>
+                        </div>
                     </div>
                     <div id="targetHud_brain" ng-show="displayTargetBrain">
-                        Brian<br/>
+                        <span ng-bind="target.name"></span> > Brian<br/>
                         <table ng-table="tableParams" class="table">
                             <tr ng-repeat="node_chain in decision_matrix">
                                <!-- <td>
                                     <input type="checkbox" ng-model="instance._selected" />
                                 </td>-->
 
-                                <td ng-repeat="node in node_chain">
+                                <td ng-repeat="node in node_chain" ng-class="{exicuting: node.exicuting }">
                                    {{ node.type }}( {{ node.target}} )
                                 </td>
 
@@ -248,6 +276,9 @@
                                 <td data-title="'State'" sortable="'state'">
                                     {{instance.state}}
                                 </td>
+                                <td data-title="'Pregant'" sortable="'is_pregant'">
+                                    {{instance.is_pregant}}
+                                </td>is_pregant
                                 <td data-title="'Gender'" sortable="'gender'">
                                     {{instance.gender}}
                                 </td>
