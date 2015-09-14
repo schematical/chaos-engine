@@ -107,6 +107,9 @@ angular.module('chaos_engine')
 				if(GameScreen.selected_object) {
 					$scope.target = GameScreen.selected_object
 				}
+				if($scope.cycle){
+					$scope.cycle(world);
+				}
 			});
 			$scope.showTarget = function(screen){
 				$scope.reset();
@@ -116,28 +119,28 @@ angular.module('chaos_engine')
 					break;
 					case('history'):
 						$scope.displayTargetHistory = true;
-						WorldCache.on('update', function(world) {
+						$scope.cycle =  function(world) {
 							$scope.history = $scope.target.object.history;//[];
 						/*	for (var i in $scope.target.object.inventory) {
 								var object = $scope.target.object.inventory[i];
 								$scope.inventory.push(object);
 							}*/
-						});
+						}
 						break;
 					case('inventory'):
 						$scope.displayTargetInventory = true;
-						WorldCache.on('update', function(world) {
+						$scope.cycle = function(world) {
 							$scope.inventory = [];
 							for (var i in $scope.target.object.inventory) {
 								var object = $scope.target.object.inventory[i];
 								$scope.inventory.push(object);
 							}
-						});
+						}
 					break;
 					case('brain'):
 						$scope.displayTargetBrain = true;
 						//We also have to prepair the logic matrix
-						WorldCache.on('update', function(world) {
+						$scope.cycle = function(world) {
 							$scope.decision_matrix = [];
 							for (var i in $scope.target.object.brain.decision_matrix) {
 								var clean_node_chain = [];
@@ -187,7 +190,7 @@ angular.module('chaos_engine')
 
 								$scope.decision_matrix.push(clean_node_chain);
 							}
-						});
+						}
 					break;
 				}
 			}

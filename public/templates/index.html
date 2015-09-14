@@ -75,6 +75,7 @@
                 height: 69%;
                 top: 0;
                 background-size: cover;
+                font-size: 22Px;
             }
             .hudPanel a{
                 color:#88ff88;
@@ -162,6 +163,13 @@
                 background-color: green;
                 color:black;
             }
+            #targetHud_history{
+                overflow-y: scroll;
+                overflow-x: hidden;
+                height: 100%;
+                width: 100%;
+
+            }
 
        </style>
         <script src="/socket.io/socket.io.js"></script>
@@ -230,7 +238,12 @@
                         </div>
                     </div>
                     <div id="targetHud_brain" ng-show="displayTargetBrain">
-                        <span ng-bind="target.name"></span> > Brian<br/>
+                        <a href="#"  ng-click="showTarget('detail')">
+                            <span ng-bind="target.name"></span>
+                        </a>
+                        &nbsp;> Brian
+
+                        <hr/>
                         <table ng-table="tableParams" class="table">
                             <tr ng-repeat="node_chain in decision_matrix">
                                <!-- <td>
@@ -245,7 +258,11 @@
                         </table>
                     </div>
                     <div id="targetHud_inventory" ng-show="displayTargetInventory">
-                        Inventory<br/>
+                        <a href="#"  ng-click="showTarget('detail')">
+                            <span ng-bind="target.name"></span>
+                        </a>
+                        &nbsp;> Inventory
+                        <hr/>
                         <table ng-table="tableParams" class="table">
                             <tr ng-repeat="object in inventory">
 
@@ -259,7 +276,11 @@
                         </table>
                     </div>
                     <div id="targetHud_history" ng-show="displayTargetHistory">
-                        History<br/>
+                        <a href="#"  ng-click="showTarget('detail')">
+                            <span ng-bind="target.name"></span>
+                        </a>
+                        &nbsp;> History
+                        <hr/>
                         <table ng-table="tableParams" class="table">
                             <tr ng-repeat="event in history">
 
@@ -280,7 +301,7 @@
                 <div id="debugHud_inside">
                     <div ng-show="displayDebugTargetList">
                         <table ng-table="tableParams" class="table">
-                            <tr ng-repeat="instance in collection">
+                            <tr ng-repeat="instance in collection" ng-if="instance.name">
                                 <td>
                                     <input type="checkbox" ng-model="instance._selected" />
                                 </td>

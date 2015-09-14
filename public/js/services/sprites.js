@@ -188,6 +188,9 @@ angular.module('chaos_engine')
 				get type(){
 					return this.object.type;
 				},
+				get history(){
+					return this.object.history;
+				},
 				get gender(){
 					return this.object.gender;
 				},
