@@ -175,6 +175,10 @@ angular.module('chaos_engine')
 
 									} else if (node_chain._chainedInputNode) {
 										node_chain = node_chain._chainedInputNode;
+									} else if (node_chain._success_node) {
+										node_chain = node_chain._success_node;
+									} else if (node_chain._fail_node) {
+										node_chain = node_chain._fail_node;
 									} else {
 										finished = true;
 									}
