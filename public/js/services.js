@@ -296,6 +296,13 @@ angular.module('chaos_engine')
 						_this.selected_tile = _this.getWorldPosFromScreenXY(mouseStartPos.x, mouseStartPos.y);
 
 					});
+					window.addEventListener('contextmenu', function(event) {
+
+							event.preventDefault();
+
+
+					});
+
 				}
 				_GameScreen.prototype.getMousePos = function(evt) {
 					var rect = this.gameCanvas.getBoundingClientRect();
@@ -433,6 +440,21 @@ angular.module('chaos_engine')
 											(draw_y * _this.tile_height/2) + (_this.tile_height * draw_x/2),
 											_this.tile_width,
 											_this.tile_height
+										);
+
+
+
+
+									}
+									//Draw walls too
+									if(tile.walls.left) {
+										var pos = _this.getScreenPosFromWorldXY(x,y);
+										_this.gameContext.drawImage(
+											tile.walls.left.image,
+											pos.x + _this.tile_width/2,
+											pos.y + _this.tile_height/2 - tile.walls.left.height,
+											_this.tile_width/2,
+											tile.walls.left.height
 										);
 									}
 								}

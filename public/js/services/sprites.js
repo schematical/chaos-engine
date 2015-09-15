@@ -303,7 +303,8 @@ angular.module('chaos_engine')
 	.service('TileCache',
 		[
 			'TileCacheData',
-			function (TileCacheData) {
+			'WallCacheData',
+			function (TileCacheData, WallCacheData) {
 				var _TileCache = {
 					tile_image_cache: {},
 					initTileInstance: function (tile_instance) {
@@ -320,6 +321,25 @@ angular.module('chaos_engine')
 							_TileCache.tile_image_cache[tile_instance.type] = image;
 						}
 						tile_instance.image = image;
+
+
+						//Walls
+						if(tile_instance.walls.left){
+							if (_TileCache.tile_image_cache[tile_instance.walls.left.type]) {
+								image = _TileCache.tile_image_cache[tile_instance.walls.left.type];
+							} else {
+								image = new Image();
+								if (!WallCacheData[tile_instance.walls.left.type]) {
+									console.error("No wall type:" + tile_instance.walls.left.type)
+								}
+								image.src = WallCacheData[tile_instance.walls.left.type].src;
+								_TileCache.tile_image_cache[tile_instance.walls.left.type] = image;
+							}
+							tile_instance.walls.left.width = WallCacheData[tile_instance.walls.left.type].width;
+							tile_instance.walls.left.height = WallCacheData[tile_instance.walls.left.type].height;
+							tile_instance.walls.left.image = image;
+						}
+
 						return tile_instance;
 
 					}
