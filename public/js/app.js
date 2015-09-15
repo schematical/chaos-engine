@@ -28,4 +28,12 @@ angular.module(
 
 		}
 	])
+	.filter('reverse', function() {
+		return function(items) {
+			if(!items || !items.length){
+				return items;
+			}
+			return items.slice().reverse();
+		};
+	});
 

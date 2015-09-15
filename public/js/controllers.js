@@ -10,6 +10,7 @@ angular.module('chaos_engine')
 				$scope.displayBackgroundHud = false;
 			}
 			$scope.show = function(panel){
+				$scope.target = GameScreen.getSelectedObject();
 				//Hide other panels
 				$scope.reset();
 				$scope.$broadcast('panel_change', {

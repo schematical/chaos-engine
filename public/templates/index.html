@@ -61,6 +61,16 @@
                 width: 5%;
 
             }
+            #hudText{
+                overflow-y: scroll;
+                overflow-x: hidden;
+                border: thin red solid;
+                position: absolute;
+                top: 26%;
+                left: 3%;
+                height: 57%;
+                width: 29%;
+            }
 
 
 
@@ -133,6 +143,7 @@
 
 
 
+
             /**-----------------------------------------
             TARGET HUD
 
@@ -171,6 +182,7 @@
 
             }
 
+
        </style>
         <script src="/socket.io/socket.io.js"></script>
 
@@ -196,6 +208,18 @@
             <div id="bottomHud" ng-show="displayBottomHud">
                 <div class="bottomHud_inner">
                     <div id="btnDebug" class="btn" ng-click="show('debug');"></div>
+                    <div id="hudText">
+                        <table ng-table="tableParams" class="table">
+                            <tr ng-repeat="event in target.history | reverse">
+                                <td>
+                                    {{event.date}}
+                                </td>
+                                <td>
+                                    {{event.desc}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -320,18 +344,20 @@
                                 <td data-title="'State'" sortable="'state'">
                                     {{instance.state}}
                                 </td>
+                                <td data-title="'Gender'" sortable="'gender'">
+                                    {{instance.gender}}
+                                </td>
+                                <td data-title="'Child Count'" sortable="'children_ct'">
+                                    {{instance.children_ct}}
+                                </td>
                                 <!--  <td data-title="'Generation'" sortable="'generation'">
                                    {{instance.generation}}
                                </td>
-                               <td data-title="'Child Count'" sortable="'children_ct'">
-                                   {{instance.children_ct}}
-                               </td>
+
                                <td data-title="'Pregant'" sortable="'gestation_ct'">
                                    {{instance.gestation_ct}}
                                </td>
-                               <td data-title="'Gender'" sortable="'gender'">
-                                   {{instance.gender}}
-                               </td>
+
                                <td data-title="'Age'" sortable="'age'">
                                    {{instance.age/1}}
                                </td>-->

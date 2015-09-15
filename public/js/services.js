@@ -265,6 +265,9 @@ angular.module('chaos_engine')
 					}, false);
 					var _this = this;
 					window.addEventListener('mousedown', function(e) {
+						if(_this.hudCtl.displayBackgroundHud){
+							return ;//A HUD IS UP SO FORGET THIS
+						}
 						var mouseStartPos = _this.getMousePos(e);
 						//Find Tile
 
@@ -287,6 +290,7 @@ angular.module('chaos_engine')
 
 					});
 					window.addEventListener('mousemove', function(e) {
+
 						var mouseStartPos = _this.getMousePos(e);
 
 						_this.selected_tile = _this.getWorldPosFromScreenXY(mouseStartPos.x, mouseStartPos.y);
@@ -327,6 +331,10 @@ angular.module('chaos_engine')
 				_GameScreen.prototype.setSelectedObject = function(object){
 					this.selected_object = object;
 				}
+				_GameScreen.prototype.getSelectedObject = function(object){
+					return this.selected_object;
+				}
+
 
 				_GameScreen.prototype.getScreenPosFromWorldXY = function(x, y){
 					var focus_object = WorldCache.world.objects[this.view_port_focus];
@@ -478,19 +486,7 @@ angular.module('chaos_engine')
 					this.setTimeout();
 				}
 
-				_GameScreen.prototype.showModal = function (modal) {
 
-					this.modal = modal;
-					if (!this.modal.world) {
-						this.modal.world = WorldCache.world;
-					}
-					if (!this.modal.screen) {
-						this.modal.screen = this;
-					}
-				}
-				_GameScreen.prototype.hideModal = function () {
-					this.modal = null;
-				}
 				_GameScreen.prototype.resize = function () {
 					var newWidth = window.innerWidth;
 					var newHeight = window.innerHeight;
