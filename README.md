@@ -19,7 +19,7 @@ inputs > outputs
 #####Smell:
 It would be cool to have certain thins emit smells that could attract creatures(NPCs) with better smell and hearing, but worse vision.
 
-Objects could emit a certain smell for a range. Dead NPCs might emit a smell for 10 tiles starting 100 cycles after they are dead and incrasing.
+Objects could emit a certain smell for a range. Dead NPCs might emit a smell for 10 tiles starting 100 cycles after they are dead and increasing.
 
 Ideally creatures would detect this smell and come to feed.
 
@@ -32,15 +32,15 @@ NPCs moving would trigger sounds.
 NPCs attacking would trigger different distances and types of sounds depending on what is equipped.
 
 An NPCs reaction to sound might vary. Some might follow a sound and others might trigger an evade.
-It is even possible that an NPC might start to eat inventory items when they hear a sound. The dog and the bell expirment.
+It is even possible that an NPC might start to eat inventory items when they hear a sound. The dog and the bell experiment.
 
 Command Outputs would cary only over a certain amount of tiles and might trigger behaviors in NPCs they are not trying to command.
 #####Sight:
 Sight allows an NPC to detect any object/action on the tiles in a funnel in the direction they are facing.
 
 Variables:
-* Width: The amount of tiles wider the vision field gets with each tile further away from the NPC they can percive.
-* Distance: The amount of tiles in the direction the NPC is facing that the NPC can percive.
+* Width: The amount of tiles wider the vision field gets with each tile further away from the NPC they can perceive.
+* Distance: The amount of tiles in the direction the NPC is facing that the NPC can perceive.
 
 
 
@@ -68,7 +68,7 @@ Some inputNodes might get chained together.
 * Input: If I have food
 * Input: If I have energy above 50%
 * Input: If I see an NPC Target with low energy
-* Output: Go tward NPC
+* Output: Go toward NPC
 * Output: Give NPC Food
 
 ####Random Thought:
@@ -84,7 +84,7 @@ A filter to select which targets to interact with
 * Based on allegiance
 * Based on gender
 * Based on age
-* Based on family/hiarchy relationship
+* Based on family/hierarchy relationship
 
 ####Memories:
 #####Pain/Pleasure Scale:
@@ -93,13 +93,13 @@ Each AI-NPC should be wired with a predisposition to equate an action with pain 
 * Eating food has a little positive pleasure
 * Eating gold has a large negative amount of pleasure
 * Not doing anything for a while should have a little negative amount of pleasure
-* Health going down(watch) should have a negitive amount of pleasure.
+* Health going down(watch) should have a negative amount of pleasure.
 * Energy Going up(Sleeping/Stimulant embibing)
 
 Those are the defaults. I would like to randomly generate other types of pain/pleasure triggers:
 
 * Ingesting other inventory_items(drugs, food, etc).
-* Killing, injurying, healing or other various interactions
+* Killing, injuring, healing or other various interactions
 * Bartering with others.
 
 If an interaction has one of these effects,
@@ -114,18 +114,18 @@ If the input node fires a watcher process will fire x cycles later. For now I wi
 When reflecting the NPC will measure the difference(delta) in its overall pleasure variable from when the action occurred to the present.
 It will then weight that difference with the inputNode that fired off.
 
---> We should also store the number of occurences so the NPC can use that to factor in how certain they are of the outcome of their decisions.
+--> We should also store the number of occurrences so the NPC can use that to factor in how certain they are of the outcome of their decisions.
 
 #####Recalling Memory:
 When an NPC runs through its **cycle** function it now will weight in the amount of **pleasure delta** on average it has recived.
 If the pleasure delta is positive it will be more likely to do the action.
-If the pleasure delta is negitive it will be less likely to do the action.
+If the pleasure delta is negative it will be less likely to do the action.
 
 ####InputNode - Boredom:
 An input Node called 'boredom' could be created when an NPC has not done an action in a while and has energy.
 Different NPC's would get Bored at varying amounts of cycles(some get bored quicker, some not so much).
 
-If the NPC gets boered it would then try to occupy it self by creating new inputNode>outputNode's.
+If the NPC gets bored it would then try to occupy it self by creating new inputNode>outputNode's.
 This allows for an increase in complexity of behavior faster then just when the NPC is spawned.
 
 Sample Output Nodes:
@@ -151,8 +151,7 @@ Eventually you could code a NPCTarget condition to find targets that have good o
 
 ####Relationship Memory:
 It might be a good idea to store ineractions and information in some type of relationship array
-
-~~~
+```
 {
     npc_id_a:[
         { action:'gave', object:'inventory_object.food' },
@@ -168,14 +167,17 @@ It might be a good idea to store ineractions and information in some type of rel
          { action:'attacked', object:'npc_id_a' },
     }
 }
+```
+
 Just like human brains they can fill up. Weighting memories might be a good idea based on how strong the **pleasure delta event** might be important.
 Example attacking me will not be forgotten.
 Watching someone eat will be.
-Also weighting things permantly like flat out relationships(father, mother, child) etc might be important.
+Also weighting things permanently like flat out relationships(father, mother, child) etc might be important.
  Low weighted interactions will be removed when the memory fills up.
  The commonality of an event might be something to consider. How often do you see an NPC eat food?
+
 ####Teaching:
-It is possible that an NPC that feels stong pain/pleasuer and has a high number of occurences of an outcome might try and teach other NPCs.
+It is possible that an NPC that feels strong pain/pleasure and has a high number of occurrences of an outcome might try and teach other NPCs.
 
 From a technical standpoint it is as follows:
 * An NPC randomly generates inputNodes.
@@ -200,7 +202,7 @@ Commands are the way NPCs communicate with each other.
 
 This is also how the player can quick interact with other NPCs.
 
-Assuming I get to the hierarchy part I will probably make it so low level NPCs take commands from highlevel NPCs
+Assuming I get to the hierarchy part I will probably make it so low level NPCs take commands from high level NPCs
 
 #####Example:
 
@@ -212,9 +214,9 @@ Programmed to obey commands from most NPCs
 
 #####Families:
 It might also be cool to factor in bloodlines into logic.
-Degrees of seperation from an NPC could affect its decision to act on certain things.
+Degrees of separation from an NPC could affect its decision to act on certain things.
 
-Theoretically NPC's that dont attack their families and nuture them will increase the likley hood that their bloodline will flourish.
+Theoretically NPC's that don't attack their families and nurture them will increase the likely hood that their bloodline will flourish.
 
 NPCs that neglect or attach their bloodline will quickly die out
 
@@ -234,9 +236,9 @@ Taking a note from the book [Brain Rules](http://www.amazon.com/Brain-Rules-Prin
 
 ####1st Brain Behaviors:
 First brain manages life support. For our purposes here NPC's can still breathe and handle basic plumbing on their own.
-That logic will probablly be hard coded for now and not subject to Evolution.
+That logic will probably be hard coded for now and not subject to Evolution.
 ####2nd Brain Behaviors:
-2nd brain covers our more animalistic instaicts
+2nd brain covers our more animalistic instincts
 
 * Feeding
 * Fighting
@@ -261,7 +263,7 @@ I also intend to play with adding two behaviors to each child at birth:
 * If parent is near > observe it
 
 Ideally this will encourage the child to follow the parent.
-Now the child could get stuck in a loop following the parent everywhere like a lemings for its entire life.
+Now the child could get stuck in a loop following the parent everywhere like a lemmings for its entire life.
 This can be mitigated by a couple of things such as:
 
 * Parents initially have more energy then the child. The child will have to rest and might lose track of the parent during this rest state.

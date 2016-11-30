@@ -7,7 +7,8 @@
 		"**/*.txt"
 	],
 	"dependencies": {
-		"angular": "*",
-		"angular-cookies": "*"
+		"angular": "1.*",
+		"angular-cookies": "*",
+		"ng-table": "1.0.0"
 	}
 }
